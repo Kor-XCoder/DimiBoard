@@ -323,7 +323,7 @@ defineExpose({ TOTAL, LANES, lanes, moveTo, resetAll, allIn, present, absent, la
 
 :root{
   --bg:#0f1115; --panel:#171922; --muted:#2a2f3a; --line:#222735;
-  --text:#e8ecf3; --sub:#aab3c5; --accent:#5ac8fa; --shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
+  --text:#e8ecf3; --sub:#ced3db; --accent:#5ac8fa; --shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
   --radius:16px; --chip:#1e2230; --chip-hover:#2a3041;
   --container-max: 1920px;
 }
@@ -356,7 +356,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 
 .main{
   display:grid;
-  grid-template-columns: minmax(260px,320px) minmax(0,1fr); /* ← 2번째 칸이 전체 가변 */
+  grid-template-columns: minmax(16rem,18rem) minmax(0,1fr); /* ← 2번째 칸이 전체 가변 */
   gap:16px;
   align-items:start;
   min-height: calc(100vh - 120px);
@@ -365,8 +365,8 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
 }
-.section{ padding:16px; min-width:0; } /* ← Grid 오버플로 방지 */
-.aside{ padding:16px }
+.section{ padding:16px; min-width:0; width: calc(95vw - 20rem) } /* ← Grid 오버플로 방지 */
+.aside{ padding:16px; width: 16rem; }
 .counter{display:grid; gap:10px}
 .card{background:#1a2030; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between}
 .label{color:var(--sub)}
@@ -379,18 +379,32 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 /* 보드 */
 .board{
   display:grid;
-  grid-template-columns: minmax(0,1.3fr) repeat(5, minmax(0,1fr)); /* ← 모든 칸이 화면 끝까지 확장 */
+  grid-template-columns: repeat(12, minmax(0,1fr));
   gap:12px; align-items:start;
   width:100%;
+  grid-auto-flow: row dense;
 }
 .lane{
   background:linear-gradient(180deg,#151926 0%,#121623 100%); border:1px dashed #2a3041;
   border-radius:14px; padding:12px; min-height:220px; min-width:0;
 }
-.lane.room{ grid-column: 1 / span 2; }
+.lane.room{ grid-row: 1; grid-column: 1 / span 4; }
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
 .lane-title{font-weight:700}
 .lane-count{color:var(--sub); font-size:12px}
+.lane[data-lane="hall"],
+.lane[data-lane="restroom"],
+.lane[data-lane="out"],
+.lane[data-lane="etc"] {
+  grid-row: 2;
+  grid-column: span 3; /* 열 너비(칸 수) */
+}
+
+.lane[data-lane="after"],
+.lane[data-lane="club"]{
+   grid-row: 1;
+   grid-column: span 4;
+ }
 .grid{ display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:8px }
 .stack{ display:flex; flex-wrap:wrap; gap:8px }
 
@@ -420,16 +434,12 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   opacity: .85;
 }
 
-/* 터치 기기에서 스크롤 제스처와 충돌 방지 */
 .chip{ touch-action: none; }
 
-/* 기본은 더 매끄러운 탭 처리(더블탭 확대 방지)는 허용, 핀치/스크롤은 허용 */
 .board{ touch-action: manipulation; }
 
-/* 드래그 중에는 핀치/스크롤을 모두 비활성화하여 제스처 충돌 방지 */
 .wrap.dragging, .wrap.dragging .board, .wrap.dragging .chip { touch-action: none; }
 
-/* 컨텍스트 메뉴 */
 .menu{
   position:fixed; z-index:50; background:#0f1118; border:1px solid #283040; border-radius:12px; padding:6px; width:150px;
   box-shadow:0 12px 28px rgba(0,0,0,.5)
@@ -442,5 +452,10 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   .main{ grid-template-columns: 1fr }
   .lane.room{ grid-column: 1 / -1 }
   .grid{ grid-template-columns: repeat(5, minmax(0,1fr)) }
+  .lane[data-lane="hall"], .lane[data-lane="restroom"]{ grid-row: auto; }
+  .lane[data-lane="out"], .lane[data-lane="etc"]{ grid-row: auto; }
+  .board{ grid-template-columns: 1fr; }
+  .lane{ grid-column: auto; }
+  .lane[data-lane="after"], .lane[data-lane="club"]{ grid-row: auto; grid-column: auto; }
 }
 </style>
