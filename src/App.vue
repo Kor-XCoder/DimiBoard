@@ -314,7 +314,10 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:12px;
   background:var(--chip); border:1px solid var(--line); cursor:grab; user-select:none; font-weight:700;
-  transition:background .15s ease, transform .05s ease
+  transition:background .15s ease, transform .05s ease;
+  color: white;
+  font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
+  font-size: 16px;
 }
 .chip:hover{ background:var(--chip-hover) }
 .chip.highlight{ outline:2px solid var(--accent); outline-offset:2px; filter:drop-shadow(0 0 10px rgba(90,200,250,.5)) }
