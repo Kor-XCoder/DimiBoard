@@ -9,7 +9,7 @@
         <input
           v-model="search"
           class="input"
-          placeholder="번호 검색 (예: 12)"
+          placeholder="번호 검색"
           inputmode="numeric"
           @keydown.stop
         />
@@ -38,8 +38,8 @@
                @dragleave="onLaneDragLeave('room')"
                @drop.prevent="onLaneDrop('room')">
             <div class="lane-header">
-              <div class="lane-title">교실</div>
-              <div class="lane-count">{{ lanes.room.length }}명</div>
+              <div class="lane-title"><span>교실</span></div>
+              <div class="lane-count"><span>{{ lanes.room.length }}명</span></div>
             </div>
             <div class="grid">
               <button v-for="n in sorted(lanes.room)" :key="`room-${n}`"
@@ -63,8 +63,8 @@
                  @dragleave="onLaneDragLeave(lane)"
                  @drop.prevent="onLaneDrop(lane)">
               <div class="lane-header">
-                <div class="lane-title">{{ laneTitles[lane] }}</div>
-                <div class="lane-count">{{ lanes[lane].length }}명</div>
+                <div class="lane-title"><span>{{ laneTitles[lane] }}</span></div>
+                <div class="lane-count"><span>{{ lanes[lane].length }}명</span></div>
               </div>
               <div class="stack">
                 <button v-for="n in sorted(lanes[lane])" :key="`${lane}-${n}`"
@@ -357,7 +357,6 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .main{
   display:grid;
   grid-template-columns: minmax(16rem,18rem) minmax(0,1fr); /* ← 2번째 칸이 전체 가변 */
-  gap:16px;
   align-items:start;
   min-height: calc(100vh - 120px);
   width: 95vw;
@@ -365,7 +364,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
 }
-.section{ padding:16px; min-width:0; width: calc(95vw - 20rem) } /* ← Grid 오버플로 방지 */
+.section{ padding:16px; min-width:0; width: calc(95vw - 18rem) } /* ← Grid 오버플로 방지 */
 .aside{ padding:16px; width: 16rem; }
 .counter{display:grid; gap:10px}
 .card{background:#1a2030; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between}
@@ -390,8 +389,9 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 .lane.room{ grid-row: 1; grid-column: 1 / span 4; }
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
-.lane-title{font-weight:700}
-.lane-count{color:var(--sub); font-size:12px}
+.lane-title span{font-weight:400; font-size: 1rem;}
+
+.lane-count{color:var(--sub); font-size:1rem}
 .lane[data-lane="hall"],
 .lane[data-lane="restroom"],
 .lane[data-lane="out"],
