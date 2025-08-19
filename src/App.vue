@@ -119,7 +119,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-
+import JSConfetti from 'js-confetti'
 // ---- 상수/타입
 type LaneId = 'room' | 'restroom' | 'hall' | 'out' | 'club' | 'etc' | 'after'
 const TOTAL = 30
@@ -129,6 +129,33 @@ const laneTitles: Record<LaneId,string> = {
   room:'교실', after:'방과후', club:'동아리', hall:'복도', restroom:'화장실/정수기', out:'외출',  etc:'기타'
 }
 const ddayText = ref("");
+const confetti = new JSConfetti()
+
+function showConfetti() {
+  confetti.addConfetti()
+}
+
+let confettiTimer: number | null = null;
+function scheduleConfetti() {
+  if (confettiTimer) clearTimeout(confettiTimer);
+
+  const now = new Date();
+  const targetTime = new Date(now);
+  targetTime.setHours(22, 50, 0, 0); // 오후 10시 50분
+
+  // 이미 지났으면 내일로 설정
+  if (now > targetTime) {
+    targetTime.setDate(targetTime.getDate() + 1);
+  }
+
+  const delay = targetTime.getTime() - now.getTime();
+
+  confettiTimer = window.setTimeout(() => {
+    showConfetti();
+    scheduleConfetti(); // 다음 날을 위해 다시 스케줄링
+  }, delay);
+}
+
 
 // ---- 상태
 type BoardState = Record<LaneId, number[]>
@@ -203,8 +230,12 @@ onMounted(() => {
   const diff = targetDate.getTime() - now.getTime()
   const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
   ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : 'D-Day'
+  scheduleConfetti();
 })
-onUnmounted(() => { if (clockTimer) clearInterval(clockTimer) })
+onUnmounted(() => {
+  if (clockTimer) clearInterval(clockTimer)
+  if (confettiTimer) clearTimeout(confettiTimer);
+})
 
 // 저장 (깊은 감시)
 watch(lanes, () => {
