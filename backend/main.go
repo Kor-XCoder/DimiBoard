@@ -86,7 +86,7 @@ func main() {
 			}
 			return c.JSON(notice)
 		})
-	app.Listen(":3000", fiber.ListenConfig{
+	app.Listen(":8082", fiber.ListenConfig{
 		EnablePrefork: true,
 	})
 }

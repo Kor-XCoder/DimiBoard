@@ -112,7 +112,7 @@
        :style="{ left: menu.x + 'px', top: menu.y + 'px' }"
        @click.stop>
     <button v-for="lane in LANES" :key="`menu-${lane}`" @click="moveTo(menu.num!, lane)">
-      → {{ laneTitles[lane] }}
+      →  {{ laneTitles[lane] }}
     </button>
   </div>
 </template>
@@ -425,6 +425,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
      font:15px/1.45 "Pretendard Variable", Pretendard,system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif}
 .wrap{display:grid; grid-template-columns: minmax(260px,320px) minmax(0,1fr); gap:16px; width:95vw; padding: 0;}
 .topbar{
+  margin-top: 1rem;
   grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:16px;
   background:var(--panel); border-radius:var(--radius); padding:14px 18px; box-shadow:var(--shadow); border:1px solid var(--line);
 }
@@ -461,8 +462,19 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 
 .btn.tiny{ padding:6px 8px; font-size:12px }
 .counter{display:grid; gap:10px}
-.card{background:#1a2030; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between}
+
+.card{
+  background:#1a2030;
+  border:1px solid var(--line);
+  border-radius:12px; 
+  padding:12px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:space-between;
+  height: 3.2rem;
+}
 .label{color:var(--sub)}
+
 .pill{padding:6px 10px; border-radius:999px; font-weight:700; letter-spacing:.4px;}
 .pill.gray{background:#2e3444}
 .pill.green{background:#14372a; color:#baffd5}
@@ -510,14 +522,21 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   transition:background .15s ease, transform .05s ease;
   color: white;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
-  font-size: 16px;
+  font-size: 19px;
+  font-weight: 550;
   /* border: 2px solid #db207d; */
 }
-/* 드래그 대상 강조 (HTML5 DnD/Pointer 공통) */
-.lane.drop-hint{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset }
+.lane.drop-hint {
+  border-color:#3b82f6;
+  box-shadow:0 0 0 2px rgba(59,130,246,.25) inset;
+}
 
 .chip:hover{ background:var(--chip-hover) }
-.chip.highlight{ outline:2px solid var(--accent); outline-offset:2px; filter:drop-shadow(0 0 10px rgba(90,200,250,.5)) }
+.chip.highlight {
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+  filter:drop-shadow(0 0 10px rgba(90,200,250,.5));
+}
 
 /* 터치/펜 드래그용 고스트 요소 */
 .drag-ghost{
