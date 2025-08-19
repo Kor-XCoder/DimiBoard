@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" ref="wrapEl">
     <header class="topbar">
       <div class="title">
         <h1>1학년 4반 인원 현황</h1>
@@ -185,6 +185,8 @@ function resetAll() {
 // 드래그 상태
 const dragNum = ref<number|null>(null)
 const hoveringLane = ref<LaneId|null>(null)
+const wrapEl = ref<HTMLElement | null>(null)
+const activePointerId = ref<number | null>(null)
 
 function onChipDragStart(num: number, e: DragEvent) {
   dragNum.value = num
@@ -245,30 +247,36 @@ function destroyGhost(){
 function onChipPointerDown(num: number, e: PointerEvent){
   // 데스크톱 마우스는 기존 HTML5 DnD로 처리 → 터치/펜만 커스텀
   if (e.pointerType === 'mouse') return
+  if (pointerDragging.value || activePointerId.value !== null) return
+  activePointerId.value = e.pointerId
   ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
   pointerDragging.value = true
   dragFromNum.value = num
   createGhost(String(num))
   moveGhost(e.clientX, e.clientY)
+  wrapEl.value?.classList.add('dragging')
 
   // 스크롤 방지
   e.preventDefault()
 }
 
 function onPointerMove(e: PointerEvent){
+  if (e.pointerId !== activePointerId.value) return
   if (!pointerDragging.value) return
   moveGhost(e.clientX, e.clientY)
   const lane = getLaneFromPoint(e.clientX, e.clientY)
   setHoverLaneClass(lane)
 }
 function onPointerUp(e: PointerEvent){
-  if (!pointerDragging.value) return
+  if (!pointerDragging.value || e.pointerId !== activePointerId.value) return
   const lane = getLaneFromPoint(e.clientX, e.clientY)
   if (dragFromNum.value != null && lane) moveTo(dragFromNum.value, lane)
   pointerDragging.value = false
   dragFromNum.value = null
   setHoverLaneClass(null)
   destroyGhost()
+  activePointerId.value = null
+  wrapEl.value?.classList.remove('dragging')
 }
 
 onMounted(() => {
@@ -414,6 +422,12 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 
 /* 터치 기기에서 스크롤 제스처와 충돌 방지 */
 .chip{ touch-action: none; }
+
+/* 기본은 더 매끄러운 탭 처리(더블탭 확대 방지)는 허용, 핀치/스크롤은 허용 */
+.board{ touch-action: manipulation; }
+
+/* 드래그 중에는 핀치/스크롤을 모두 비활성화하여 제스처 충돌 방지 */
+.wrap.dragging, .wrap.dragging .board, .wrap.dragging .chip { touch-action: none; }
 
 /* 컨텍스트 메뉴 */
 .menu{
