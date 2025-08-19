@@ -38,8 +38,6 @@
               placeholder="공지사항을 입력 후 Enter 또는 추가 버튼"
               @keydown.enter.prevent="addNotice"
             />
-            <button class="btn ok" @click="addNotice">추가</button>
-            <button class="btn ghost" @click="clearNotices" title="모든 공지 삭제">전체삭제</button>
           </div>
           <ul class="notice-list">
             <li v-if="!notices.length" class="notice-empty">등록된 공지가 없습니다.</li>
@@ -415,7 +413,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
 }
-.section{ padding:16px; min-width:0; width: calc(95vw - 16rem) } /* ← Grid 오버플로 방지 */
+.section{ padding:16px; min-width:0; width: calc(95vw - 18rem) } /* ← Grid 오버플로 방지 */
 .aside{ padding:16px; width: 16rem; }
 /* 집계/공지사항 aside heading */
 .aside-heading{ margin:12px 0 8px; font-weight:700; color:var(--sub); font-size:13px; letter-spacing:.2px }
