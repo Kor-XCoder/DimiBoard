@@ -1,10 +1,13 @@
 package backend
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/log"
 	"github.com/gofiber/fiber/v3/middleware/compress"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/helmet"
@@ -49,27 +52,28 @@ func main() {
 			}
 
 			for _, key := range keys {
-				value := new(Notice)
-				raw, err := storage.Get(string(key))
-				if err != nil {
-					return err
+				if strings.HasPrefix(string(key), "notice-") {
+					value := new(Notice)
+					raw, err := storage.Get(string(key))
+					if err != nil {
+						return err
+					}
+					err = sonic.Unmarshal(raw, value)
+					if err != nil {
+						return err
+					}
+					result = append(result, Notice{
+						Title:    value.Title,
+						Type:     value.Type,
+						Deadline: value.Deadline,
+					})
 				}
-				err = sonic.Unmarshal(raw, value)
-				if err != nil {
-					return err
-				}
-				result = append(result, Notice{
-					Title:    value.Title,
-					Type:     value.Type,
-					Deadline: value.Deadline,
-				})
 			}
 			return c.JSON(result)
 		}).
 		Post(func(c fiber.Ctx) error {
 			notice := new(Notice)
-			err := c.Bind().Body(notice)
-			if err != nil {
+			if err := c.Bind().Body(notice); err != nil {
 				return err
 			}
 			data, err := sonic.Marshal(notice)
@@ -80,13 +84,14 @@ func main() {
 			if err != nil {
 				return err
 			}
-			err = storage.Set(notice.Title, data, time.Until(deadline))
+			err = storage.Set(fmt.Sprintf("notice-%s", notice.Title), data, time.Until(deadline))
 			if err != nil {
 				return err
 			}
 			return c.JSON(notice)
 		})
-	app.Listen(":8082", fiber.ListenConfig{
+	log.Infof("Server starting on port %d", 8082)
+	log.Fatal(app.Listen(":8082", fiber.ListenConfig{
 		EnablePrefork: true,
-	})
+	}))
 }
