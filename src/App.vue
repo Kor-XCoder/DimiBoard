@@ -228,7 +228,7 @@ onMounted(() => {
   const targetDate = new Date('2025-09-03')
   const now = new Date()
   const diff = targetDate.getTime() - now.getTime()
-  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
+  const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24))
   ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : 'D-Day'
   scheduleConfetti();
 })
