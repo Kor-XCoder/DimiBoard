@@ -120,6 +120,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import JSConfetti from 'js-confetti'
+import axios from 'axios'
 // ---- 상수/타입
 type LaneId = 'room' | 'restroom' | 'hall' | 'out' | 'club' | 'etc' | 'after'
 const TOTAL = 30
@@ -156,6 +157,32 @@ function scheduleConfetti() {
   }, delay);
 }
 
+let timer: number | undefined
+
+// 10초 마다 실행
+onMounted(() => {
+  timer = window.setInterval(async () => {
+    // 9/3까지의 남은 날짜 계산
+    const targetDate = new Date('2025-09-03')
+    const now = new Date()
+    const diff = targetDate.getTime() - now.getTime()
+    const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24))
+    ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : 'D-Day'
+
+    try {
+      const response = await axios.get('https://dimiboard.coder.ac/api/notice')
+      console.log(response.data)
+      notices.value = response.data
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }, 10000)
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
+})
+
 
 // ---- 상태
 type BoardState = Record<LaneId, number[]>
@@ -185,8 +212,13 @@ const otherLanes = computed(() => LANES.filter(l => l !== 'room'))
 const search = ref('')
 
 // 공지사항 상태 + 저장
-const NOTICE_KEY = 'ystudy_board_notices_v1'
-const notices = ref<string[]>([])
+type NoticeType = {
+  title: string
+  type: string
+  deadline: Date
+}
+
+const notices = ref<NoticeType[]>([])
 const newNotice = ref('')
 
 // 초기 로드
@@ -224,12 +256,6 @@ onMounted(() => {
   const tick = () => nowText.value = fmt.format(new Date())
   tick()
   clockTimer = window.setInterval(tick, 1000)
-  // 9/3까지의 남은 날짜 계산
-  const targetDate = new Date('2025-09-03')
-  const now = new Date()
-  const diff = targetDate.getTime() - now.getTime()
-  const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24))
-  ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : 'D-Day'
   scheduleConfetti();
 })
 onUnmounted(() => {

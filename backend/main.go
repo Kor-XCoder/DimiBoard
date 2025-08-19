@@ -24,7 +24,7 @@ func main() {
 	app.Use(helmet.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:8081"},
 		AllowCredentials: true,
 	}))
 
