@@ -93,7 +93,7 @@
         
         <!-- 공지사항 -->
         <div class="notice">
-          <span>수행평가 및 공지사항</span>
+          <span style="font-weight: 600; font-size: 1.1rem;">수행평가 및 공지사항</span>
           <ul class="notice-ul">
             <li><span>Test 1</span></li>
             <li><span>Test 2</span></li>
@@ -585,7 +585,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 
 .dday span{
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .dday h1{
