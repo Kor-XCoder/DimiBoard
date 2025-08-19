@@ -453,7 +453,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 .lane.room{ grid-row: 1; grid-column: 1 / span 4; }
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
-.lane-title span{font-weight:400; font-size: 1rem;}
+.lane-title span{font-weight:600; font-size: 1.2rem;}
 
 .lane-count{color:var(--sub); font-size:1rem}
 .lane[data-lane="hall"],
