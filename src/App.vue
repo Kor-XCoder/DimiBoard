@@ -3,7 +3,7 @@
     <header class="topbar">
       <div class="title">
         <h1>1학년 4반 인원 현황</h1>
-        <span class="sub" style="color: white; font-size: 1.3rem;">{{ nowText }}</span>
+        <span class="sub" style="color: white; font-size: 1.4rem; margin-left: 1rem;">{{ nowText }}</span>
       </div>
       <div class="toolbar">
         <input
@@ -26,6 +26,29 @@
           <div class="card"><span class="label" style="font-size: 17px;">총원</span><span class="pill gray" style="font-size: 17px;">{{ TOTAL }}명</span></div>
           <div class="card"><span class="label" style="font-size: 17px;">현원(교실)</span><span class="pill green" style="font-size: 17px;">{{ present }}명</span></div>
           <div class="card"><span class="label" style="font-size: 17px;">결원</span><span class="pill red" style="font-size: 17px;">{{ absent }}명</span></div>
+        </div>
+
+        <!-- 공지사항: 집계 아래에 바로 표시 -->
+        <div class="notice-panel">
+          <h3 class="aside-heading">공지사항</h3>
+          <div class="notice-input">
+            <input
+              v-model.trim="newNotice"
+              class="input notice"
+              placeholder="공지사항을 입력 후 Enter 또는 추가 버튼"
+              @keydown.enter.prevent="addNotice"
+            />
+            <button class="btn ok" @click="addNotice">추가</button>
+            <button class="btn ghost" @click="clearNotices" title="모든 공지 삭제">전체삭제</button>
+          </div>
+          <ul class="notice-list">
+            <li v-if="!notices.length" class="notice-empty">등록된 공지가 없습니다.</li>
+            <li v-for="(t, i) in notices" :key="`n-${i}`" class="notice-item">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="text">{{ t }}</span>
+              <button class="btn tiny" @click="removeNotice(i)" title="삭제">삭제</button>
+            </li>
+          </ul>
         </div>
       </aside>
 
@@ -134,6 +157,34 @@ const present = computed(() => lanes.room.length)
 const absent  = computed(() => TOTAL - present.value)
 const otherLanes = computed(() => LANES.filter(l => l !== 'room'))
 const search = ref('')
+
+// 공지사항 상태 + 저장
+const NOTICE_KEY = 'ystudy_board_notices_v1'
+const notices = ref<string[]>([])
+const newNotice = ref('')
+
+// 초기 로드
+try {
+  const raw = localStorage.getItem(NOTICE_KEY)
+  if (raw) notices.value = JSON.parse(raw)
+} catch { /* ignore */ }
+
+watch(notices, (v) => {
+  localStorage.setItem(NOTICE_KEY, JSON.stringify(v))
+}, { deep: false })
+
+function addNotice(){
+  const t = newNotice.value.trim()
+  if (!t) return
+  notices.value.unshift(t)
+  newNotice.value = ''
+}
+function removeNotice(i: number){
+  notices.value.splice(i,1)
+}
+function clearNotices(){
+  if (confirm('모든 공지를 삭제하시겠습니까?')) notices.value = []
+}
 const searchNum = computed(() => {
   const n = Number(search.value.trim())
   return Number.isFinite(n) ? n : null
@@ -324,7 +375,7 @@ defineExpose({ TOTAL, LANES, lanes, moveTo, resetAll, allIn, present, absent, la
 :root{
   --bg:#0f1115; --panel:#171922; --muted:#2a2f3a; --line:#222735;
   --text:#e8ecf3; --sub:#ced3db; --accent:#5ac8fa; --shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
-  --radius:16px; --chip:#1e2230; --chip-hover:#2a3041;
+  --radius:16px; --chip:#ced1de3b; --chip-hover:#ced1de61;
   --container-max: 1920px;
 }
 *{box-sizing:border-box}
@@ -364,8 +415,21 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
 }
-.section{ padding:16px; min-width:0; width: calc(95vw - 18rem) } /* ← Grid 오버플로 방지 */
+.section{ padding:16px; min-width:0; width: calc(95vw - 16rem) } /* ← Grid 오버플로 방지 */
 .aside{ padding:16px; width: 16rem; }
+/* 집계/공지사항 aside heading */
+.aside-heading{ margin:12px 0 8px; font-weight:700; color:var(--sub); font-size:13px; letter-spacing:.2px }
+
+/* 공지사항 패널 */
+.notice-panel{ display:flex; flex-direction:column; gap:10px }
+.notice-input{ display:flex; gap:8px }
+.input.notice{ flex:1; min-width:0 }
+.notice-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; max-height: 40vh; overflow:auto }
+.notice-item{ display:flex; align-items:center; gap:8px; background:#1a2030; border:1px solid var(--line); border-radius:10px; padding:8px 10px }
+.notice-item .dot{ width:6px; height:6px; border-radius:999px; background:#5ac8fa }
+.notice-item .text{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.notice-empty{ color: var(--sub); font-size: 13px; padding: 6px 2px }
+.btn.tiny{ padding:6px 8px; font-size:12px }
 .counter{display:grid; gap:10px}
 .card{background:#1a2030; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between}
 .label{color:var(--sub)}
@@ -384,7 +448,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   grid-auto-flow: row dense;
 }
 .lane{
-  background:linear-gradient(180deg,#151926 0%,#121623 100%); border:1px dashed #2a3041;
+  background:linear-gradient(180deg,#151926 0%,#121623 100%); border:1px dashed #5c698e;
   border-radius:14px; padding:12px; min-height:220px; min-width:0;
 }
 .lane.room{ grid-row: 1; grid-column: 1 / span 4; }
@@ -417,6 +481,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   color: white;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 16px;
+  /* border: 0.2px solid #ffffff; */
 }
 /* 드래그 대상 강조 (HTML5 DnD/Pointer 공통) */
 .lane.drop-hint{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset }
