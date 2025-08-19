@@ -20,27 +20,16 @@
     </header>
 
     <main class="main">
-      <!-- 좌측 집계 -->
-      <aside class="aside">
+      <!-- 좌측 집계 (블록 1) -->
+      <aside class="aside aside-summary">
         <div class="counter">
           <div class="card"><span class="label" style="font-size: 17px;">총원</span><span class="pill gray" style="font-size: 17px;">{{ TOTAL }}명</span></div>
           <div class="card"><span class="label" style="font-size: 17px;">현원(교실)</span><span class="pill green" style="font-size: 17px;">{{ present }}명</span></div>
           <div class="card"><span class="label" style="font-size: 17px;">결원</span><span class="pill red" style="font-size: 17px;">{{ absent }}명</span></div>
         </div>
-        
-        <!-- 디데이 블록 -->
-        <div class="dday">
-          <span>9월 모의고사</span>
-          <h1>D-15</h1>
-        </div>
-        
-        <!-- 공지사항: 집계 아래에 바로 표시 -->
-        <div class="notice">
-          
-        </div>
       </aside>
 
-      <!-- 우측 보드 -->
+      <!-- 우측 보드: 2행을 모두 차지 -->
       <section class="section">
         <div class="board">
           <div class="lane room"
@@ -93,6 +82,23 @@
           </template>
         </div>
       </section>
+
+      <!-- 좌측 D‑Day & 공지사항 (블록 2) -->
+      <aside class="aside aside-announcement">
+        <!-- 디데이 블록 -->
+        <div class="dday">
+          <span>9월 모의고사</span>
+          <h1>D-15</h1>
+        </div>
+        
+        <!-- 공지사항 -->
+        <div class="notice">
+          <span>수행평가 및 공지사항</span>
+          <ul class="notice-ul">
+
+          </ul>
+        </div>
+      </aside>
     </main>
   </div>
 
@@ -320,6 +326,8 @@ onMounted(() => {
   window.addEventListener('pointermove', onPointerMove, { passive: false })
   window.addEventListener('pointerup', onPointerUp, { passive: false })
   window.addEventListener('pointercancel', onPointerUp, { passive: false })
+  const el = document.documentElement
+  el.requestFullscreen?.()
 })
 onUnmounted(() => {
   window.removeEventListener('pointermove', onPointerMove)
@@ -397,24 +405,19 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   align-items:start;
   min-height: calc(100vh - 120px);
   width: 95vw;
+  grid-auto-rows: auto;
 }
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
 }
-.section{ padding:16px; min-width:0; width: calc(95vw - 18rem) } /* ← Grid 오버플로 방지 */
+.section{ padding:16px; min-width:0; grid-row: 1 / span 2; grid-column: 2; }
 .aside{ padding:16px; width: 16rem; }
+
+.aside-summary{ grid-column: 1; grid-row: 1; }
+.aside-announcement{ grid-column: 1; grid-row: 2; }
 /* 집계/공지사항 aside heading */
 .aside-heading{ margin:12px 0 8px; font-weight:700; color:var(--sub); font-size:17px; letter-spacing:.2px }
 
-/* 공지사항 패널 */
-.notice-panel{ display:flex; flex-direction:column; gap:10px }
-.notice-input{ display:flex; gap:8px }
-.input.notice{ flex:1; min-width:0 }
-.notice-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; max-height: 40vh; overflow:auto }
-.notice-item{ display:flex; align-items:center; gap:8px; background:#1a2030; border:1px solid var(--line); border-radius:10px; padding:8px 10px }
-.notice-item .dot{ width:6px; height:6px; border-radius:999px; background:#5ac8fa }
-.notice-item .text{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-.notice-empty{ color: var(--sub); font-size: 13px; padding: 6px 2px }
 .btn.tiny{ padding:6px 8px; font-size:12px }
 .counter{display:grid; gap:10px}
 .card{background:#1a2030; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:space-between}
@@ -508,6 +511,8 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   .board{ grid-template-columns: 1fr; }
   .lane{ grid-column: auto; }
   .lane[data-lane="after"], .lane[data-lane="club"]{ grid-row: auto; grid-column: auto; }
+  .section{ grid-row:auto; grid-column:auto; }
+  .aside-summary, .aside-announcement{ grid-row:auto; grid-column:auto; }
 }
 
 .dday {
@@ -527,5 +532,18 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .dday h1{
   margin: 0;
   font-size: 1.8rem;
+}
+
+/* 공지사항 패널 */
+
+.notice {
+  margin-top: 1rem;
+  margin-left: 5px;
+}
+
+.notice-ul {
+  padding: 0 0 0 20px;
+  margin: 0;
+  margin-top: 5px;
 }
 </style>
