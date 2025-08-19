@@ -88,14 +88,18 @@
         <!-- 디데이 블록 -->
         <div class="dday">
           <span>9월 모의고사</span>
-          <h1>D-15</h1>
+          <h1>{{ ddayText }}</h1>
         </div>
         
         <!-- 공지사항 -->
         <div class="notice">
           <span>수행평가 및 공지사항</span>
           <ul class="notice-ul">
-
+            <li><span>Test 1</span></li>
+            <li><span>Test 2</span></li>
+            <li><span>Test 3</span></li>
+            <li><span>Test 4</span></li>
+            <li><span>Test 5</span></li>
           </ul>
         </div>
       </aside>
@@ -124,6 +128,7 @@ const STORAGE_KEY = 'ystudy_board_state_v1'
 const laneTitles: Record<LaneId,string> = {
   room:'교실', after:'방과후', club:'동아리', hall:'복도', restroom:'화장실/정수기', out:'외출',  etc:'기타'
 }
+const ddayText = ref("");
 
 // ---- 상태
 type BoardState = Record<LaneId, number[]>
@@ -192,6 +197,12 @@ onMounted(() => {
   const tick = () => nowText.value = fmt.format(new Date())
   tick()
   clockTimer = window.setInterval(tick, 1000)
+  // 9/3까지의 남은 날짜 계산
+  const targetDate = new Date('2025-09-03')
+  const now = new Date()
+  const diff = targetDate.getTime() - now.getTime()
+  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
+  ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : 'D-Day'
 })
 onUnmounted(() => { if (clockTimer) clearInterval(clockTimer) })
 
@@ -326,8 +337,6 @@ onMounted(() => {
   window.addEventListener('pointermove', onPointerMove, { passive: false })
   window.addEventListener('pointerup', onPointerUp, { passive: false })
   window.addEventListener('pointercancel', onPointerUp, { passive: false })
-  const el = document.documentElement
-  el.requestFullscreen?.()
 })
 onUnmounted(() => {
   window.removeEventListener('pointermove', onPointerMove)
@@ -409,8 +418,9 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 .aside, .section{
   background:var(--panel); border-radius:var(--radius); border:1px solid var(--line); box-shadow:var(--shadow);
+  grid-auto-rows: auto;
 }
-.section{ padding:16px; min-width:0; grid-row: 1 / span 2; grid-column: 2; }
+.section{ padding:16px; min-width:0; grid-row: 1 / span 5; grid-column: 2; }
 .aside{ padding:16px; width: 16rem; }
 
 .aside-summary{ grid-column: 1; grid-row: 1; }
@@ -470,7 +480,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   color: white;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 16px;
-  /* border: 0.2px solid #ffffff; */
+  /* border: 2px solid #db207d; */
 }
 /* 드래그 대상 강조 (HTML5 DnD/Pointer 공통) */
 .lane.drop-hint{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset }
@@ -521,7 +531,6 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   align-items: start;
   justify-content: center;
   margin: 0;
-  margin-top: 20px;
   margin-left: 5px;
 }
 
@@ -542,8 +551,25 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 
 .notice-ul {
-  padding: 0 0 0 20px;
+  padding: 0 0 0 10px;
   margin: 0;
   margin-top: 5px;
+}
+
+.notice-ul li {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  list-style-type: none;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 7px;
+  height: 2.2rem;
+  border: 1px solid #e89f0d;
+  background: rgba(232, 159, 13, 0.17);
+}
+
+.notice-ul li span {
+  margin-left: 5px;
 }
 </style>
