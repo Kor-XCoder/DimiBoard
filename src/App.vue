@@ -27,26 +27,16 @@
           <div class="card"><span class="label" style="font-size: 17px;">현원(교실)</span><span class="pill green" style="font-size: 17px;">{{ present }}명</span></div>
           <div class="card"><span class="label" style="font-size: 17px;">결원</span><span class="pill red" style="font-size: 17px;">{{ absent }}명</span></div>
         </div>
-
+        
+        <!-- 디데이 블록 -->
+        <div class="dday">
+          <span>9월 모의고사</span>
+          <h1>D-15</h1>
+        </div>
+        
         <!-- 공지사항: 집계 아래에 바로 표시 -->
-        <div class="notice-panel">
-          <h3 class="aside-heading">공지사항</h3>
-          <div class="notice-input">
-            <input
-              v-model.trim="newNotice"
-              class="input notice"
-              placeholder="공지사항을 입력 후 Enter 또는 추가 버튼"
-              @keydown.enter.prevent="addNotice"
-            />
-          </div>
-          <ul class="notice-list">
-            <li v-if="!notices.length" class="notice-empty">등록된 공지가 없습니다.</li>
-            <li v-for="(t, i) in notices" :key="`n-${i}`" class="notice-item">
-              <span class="dot" aria-hidden="true"></span>
-              <span class="text">{{ t }}</span>
-              <button class="btn tiny" @click="removeNotice(i)" title="삭제">삭제</button>
-            </li>
-          </ul>
+        <div class="notice">
+          
         </div>
       </aside>
 
@@ -202,9 +192,7 @@ onUnmounted(() => { if (clockTimer) clearInterval(clockTimer) })
 // 저장 (깊은 감시)
 watch(lanes, () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(lanes))
-}, { deep: true }) // Composition API의 watch 동작.  [oai_citation:1‡vuejs.org](https://vuejs.org/guide/essentials/watchers?utm_source=chatgpt.com)
-
-// 정렬 헬퍼
+}, { deep: true })
 const sorted = (arr: number[]) => [...arr].sort((a,b)=>a-b)
 
 // 이동 공용
@@ -416,7 +404,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .section{ padding:16px; min-width:0; width: calc(95vw - 18rem) } /* ← Grid 오버플로 방지 */
 .aside{ padding:16px; width: 16rem; }
 /* 집계/공지사항 aside heading */
-.aside-heading{ margin:12px 0 8px; font-weight:700; color:var(--sub); font-size:13px; letter-spacing:.2px }
+.aside-heading{ margin:12px 0 8px; font-weight:700; color:var(--sub); font-size:17px; letter-spacing:.2px }
 
 /* 공지사항 패널 */
 .notice-panel{ display:flex; flex-direction:column; gap:10px }
@@ -520,5 +508,24 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   .board{ grid-template-columns: 1fr; }
   .lane{ grid-column: auto; }
   .lane[data-lane="after"], .lane[data-lane="club"]{ grid-row: auto; grid-column: auto; }
+}
+
+.dday {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  margin: 0;
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.dday span{
+  font-size: 0.9rem;
+}
+
+.dday h1{
+  margin: 0;
+  font-size: 1.8rem;
 }
 </style>
