@@ -551,7 +551,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 
 .notice-ul {
-  padding: 0 0 0 10px;
+  padding: 0;
   margin: 0;
   margin-top: 5px;
 }
@@ -570,6 +570,6 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 }
 
 .notice-ul li span {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 </style>
