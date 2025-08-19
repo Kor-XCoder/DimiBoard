@@ -523,7 +523,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   color: white;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 19px;
-  font-weight: 550;
+  font-weight: 700;
   /* border: 2px solid #db207d; */
 }
 .lane.drop-hint {
