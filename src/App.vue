@@ -48,7 +48,8 @@
                       draggable="true"
                       @dragstart="onChipDragStart(n, $event)"
                       @dragend="onChipDragEnd"
-                      @click="openMenu($event, n)">
+                      @click="openMenu($event, n)"
+                      @pointerdown="onChipPointerDown(n, $event)">
                 {{ n }}
               </button>
             </div>
@@ -72,7 +73,8 @@
                         draggable="true"
                         @dragstart="onChipDragStart(n, $event)"
                         @dragend="onChipDragEnd"
-                        @click="openMenu($event, n)">
+                        @click="openMenu($event, n)"
+                        @pointerdown="onChipPointerDown(n, $event)">
                   {{ n }}
                 </button>
               </div>
@@ -205,6 +207,81 @@ function onLaneDrop(lane: LaneId) {
   hoveringLane.value = null
 }
 
+// ===== Pointer Events 기반 터치/펜 드래그 (모바일 대응) =====
+const pointerDragging = ref(false)
+const dragGhost = ref<HTMLElement | null>(null)
+const dragFromNum = ref<number | null>(null)
+const hoverLaneEl = ref<HTMLElement | null>(null)
+
+function getLaneFromPoint(x: number, y: number): LaneId | null {
+  const el = document.elementFromPoint(x, y) as HTMLElement | null
+  const laneEl = el?.closest('[data-lane]') as HTMLElement | null
+  return (laneEl?.getAttribute('data-lane') as LaneId) || null
+}
+function setHoverLaneClass(laneId: LaneId | null) {
+  // 기존 강조 제거
+  if (hoverLaneEl.value) hoverLaneEl.value.classList.remove('drop-hint')
+  if (!laneId) { hoverLaneEl.value = null; return }
+  const el = document.querySelector(`[data-lane="${laneId}"]`) as HTMLElement | null
+  if (el) { el.classList.add('drop-hint'); hoverLaneEl.value = el }
+}
+
+function createGhost(text: string) {
+  const el = document.createElement('div')
+  el.className = 'chip drag-ghost'
+  el.textContent = text
+  document.body.appendChild(el)
+  dragGhost.value = el
+}
+function moveGhost(x: number, y: number) {
+  if (!dragGhost.value) return
+  dragGhost.value.style.transform = `translate(${x}px, ${y}px)`
+}
+function destroyGhost(){
+  if (dragGhost.value?.parentElement) dragGhost.value.parentElement.removeChild(dragGhost.value)
+  dragGhost.value = null
+}
+
+function onChipPointerDown(num: number, e: PointerEvent){
+  // 데스크톱 마우스는 기존 HTML5 DnD로 처리 → 터치/펜만 커스텀
+  if (e.pointerType === 'mouse') return
+  ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+  pointerDragging.value = true
+  dragFromNum.value = num
+  createGhost(String(num))
+  moveGhost(e.clientX, e.clientY)
+
+  // 스크롤 방지
+  e.preventDefault()
+}
+
+function onPointerMove(e: PointerEvent){
+  if (!pointerDragging.value) return
+  moveGhost(e.clientX, e.clientY)
+  const lane = getLaneFromPoint(e.clientX, e.clientY)
+  setHoverLaneClass(lane)
+}
+function onPointerUp(e: PointerEvent){
+  if (!pointerDragging.value) return
+  const lane = getLaneFromPoint(e.clientX, e.clientY)
+  if (dragFromNum.value != null && lane) moveTo(dragFromNum.value, lane)
+  pointerDragging.value = false
+  dragFromNum.value = null
+  setHoverLaneClass(null)
+  destroyGhost()
+}
+
+onMounted(() => {
+  window.addEventListener('pointermove', onPointerMove, { passive: false })
+  window.addEventListener('pointerup', onPointerUp, { passive: false })
+  window.addEventListener('pointercancel', onPointerUp, { passive: false })
+})
+onUnmounted(() => {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
+  window.removeEventListener('pointercancel', onPointerUp)
+})
+
 // 컨텍스트 메뉴
 const menu = reactive<{ open:boolean; x:number; y:number; num:number|null }>({ open:false, x:0, y:0, num:null })
 function openMenu(e: MouseEvent, num: number) {
@@ -319,8 +396,24 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 16px;
 }
+/* 드래그 대상 강조 (HTML5 DnD/Pointer 공통) */
+.lane.drop-hint{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset }
+
 .chip:hover{ background:var(--chip-hover) }
 .chip.highlight{ outline:2px solid var(--accent); outline-offset:2px; filter:drop-shadow(0 0 10px rgba(90,200,250,.5)) }
+
+/* 터치/펜 드래그용 고스트 요소 */
+.drag-ghost{
+  position: fixed;
+  left: 0; top: 0;
+  transform: translate(-9999px, -9999px);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: .85;
+}
+
+/* 터치 기기에서 스크롤 제스처와 충돌 방지 */
+.chip{ touch-action: none; }
 
 /* 컨텍스트 메뉴 */
 .menu{
