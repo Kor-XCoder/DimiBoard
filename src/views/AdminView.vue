@@ -74,11 +74,9 @@ async function addNotice(){
 async function removeNotice(i){
     if (confirm('이 공지를 삭제하시겠습니까?')) {
         try {
-            const response = await axios.delete('https://back-dimiboard.coder.ac/notice',
-                {
-                    id: notices.value[i].id,
-                }
-            )
+            const response = await axios.delete('https://back-dimiboard.coder.ac/notice', {
+                data: { id: notices.value[i].id }
+            });
             notices.value = response.data
         } catch (error) {
             console.error('Error fetching data:', error)
