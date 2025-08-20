@@ -128,21 +128,21 @@ func main() {
 				"etc":      &result.Other,
 			}
 			for i := range 30 {
-				location, err := storage.Get(fmt.Sprintf("location-%d", i))
+				location, err := storage.Get(fmt.Sprintf("location-%d", i+1))
 				if err != nil {
 					continue
 				}
 
 				locationStr := string(location)
 				if slice, exists := locationMap[locationStr]; exists {
-					*slice = append(*slice, i)
+					*slice = append(*slice, i+1)
 				}
 			}
 			return c.JSON(result)
 		}).
 		Post(func(c fiber.Ctx) error {
 			for i := range 30 {
-				storage.Set(fmt.Sprintf("location-%d", i), []byte("room"), 0)
+				storage.Set(fmt.Sprintf("location-%d", i+1), []byte("room"), 0)
 			}
 			return c.SendStatus(fiber.StatusCreated)
 		}).
