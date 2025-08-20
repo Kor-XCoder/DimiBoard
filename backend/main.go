@@ -65,7 +65,7 @@ func main() {
 						return err
 					}
 					result = append(result, Notice{
-						ID:       value.ID,
+						ID:       strings.TrimPrefix(string(key), "notice-"),
 						Title:    value.Title,
 						Type:     value.Type,
 						Deadline: value.Deadline,

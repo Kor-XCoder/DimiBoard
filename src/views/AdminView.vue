@@ -19,9 +19,9 @@
             <div class="notice">
                 <span style="font-weight: 600; font-size: 1.1rem;">수행평가 및 공지사항</span>
                 <ul class="notice-ul">
-                <li v-for="(notice, index) in notices" :key="index">
-                    <span>{{ notice.title }}</span>
-                </li>
+                    <li v-for="(notice, index) in notices" @click="removeNotice(index)" :key="index">
+                        <span>{{ notice.title }}</span>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -48,6 +48,7 @@ async function fetchNotices() {
 
 onMounted(() => {
   fetchNotices()
+  console.log(notices.value)
 })
 
 
@@ -55,7 +56,7 @@ async function addNotice(){
     if (isComposing.value) return;
     const t = newNotice.value.trim()
     if (!t) return
-     newNotice.value = ''
+    newNotice.value = ''
 
     try {
         const response = await axios.post('https://back-dimiboard.coder.ac/notice',
@@ -64,15 +65,26 @@ async function addNotice(){
                 deadline: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 10)
             }
         )
-        console.log(response.data)
         notices.value = response.data
     } catch (error) {
         console.error('Error fetching data:', error)
     }
-
+    await fetchNotices()
 }
-function removeNotice(i){
-  notices.value.splice(i,1)
+async function removeNotice(i){
+    if (confirm('이 공지를 삭제하시겠습니까?')) {
+        try {
+            const response = await axios.delete('https://back-dimiboard.coder.ac/notice',
+                {
+                    id: notices.value[i].id,
+                }
+            )
+            notices.value = response.data
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+        await fetchNotices()
+    }
 }
 function clearNotices(){
   if (confirm('모든 공지를 삭제하시겠습니까?')) notices.value = []
