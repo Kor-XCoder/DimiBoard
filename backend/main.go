@@ -80,9 +80,15 @@ func main() {
 			if err != nil {
 				return err
 			}
-			deadline, err := time.Parse("YYYY-MM-DD", notice.Deadline)
+			deadline, err := time.Parse("2006-01-02", notice.Deadline)
 			if err != nil {
 				return err
+			}
+			_, err = storage.Get(fmt.Sprintf("notice-%s", notice.Title))
+			if err == nil {
+				return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+					"message": "Notice already exists",
+				})
 			}
 			err = storage.Set(fmt.Sprintf("notice-%s", notice.Title), data, time.Until(deadline))
 			if err != nil {
