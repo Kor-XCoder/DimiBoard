@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v3"
@@ -25,7 +24,7 @@ func main() {
 	app.Use(helmet.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:8081", "https://dimiboard.coder.ac"},
+		AllowOrigins:     []string{"https://dimiboard.coder.ac"},
 		AllowCredentials: true,
 	}))
 
@@ -43,6 +42,15 @@ func main() {
 		Title    string `json:"title"`
 		Type     string `json:"type"`
 		Deadline string `json:"deadline"`
+	}
+
+	type Locations struct {
+		Room     []int `json:"room"`
+		After    []int `json:"after"`
+		Club     []int `json:"club"`
+		Restroom []int `json:"restroom"`
+		Out      []int `json:"out"`
+		Other    []int `json:"etc"`
 	}
 
 	app.Route("/notice").
@@ -83,12 +91,12 @@ func main() {
 			if err != nil {
 				return err
 			}
-			deadline, err := time.Parse("2006-01-02", notice.Deadline)
+			// deadline, err := time.Parse("2006-01-02", notice.Deadline)
 			if err != nil {
 				return err
 			}
 			uuid := uuid.New().String()
-			err = storage.Set(fmt.Sprintf("notice-%s", uuid), data, time.Until(deadline))
+			err = storage.Set(fmt.Sprintf("notice-%s", uuid), data, 0)
 			if err != nil {
 				return err
 			}
@@ -103,6 +111,54 @@ func main() {
 				return err
 			}
 			err = storage.Delete(fmt.Sprintf("notice-%s", data.ID))
+			if err != nil {
+				return err
+			}
+			return c.SendStatus(fiber.StatusNoContent)
+		})
+	app.Route("/location").
+		Get(func(c fiber.Ctx) error {
+			var result Locations
+			locationMap := map[string]*[]int{
+				"room":     &result.Room,
+				"after":    &result.After,
+				"club":     &result.Club,
+				"restroom": &result.Restroom,
+				"out":      &result.Out,
+				"etc":      &result.Other,
+			}
+			for i := range 30 {
+				location, err := storage.Get(fmt.Sprintf("location-%d", i))
+				if err != nil {
+					continue
+				}
+
+				locationStr := string(location)
+				if slice, exists := locationMap[locationStr]; exists {
+					*slice = append(*slice, i)
+				}
+			}
+			return c.JSON(result)
+		}).
+		Post(func(c fiber.Ctx) error {
+			for i := range 30 {
+				storage.Set(fmt.Sprintf("location-%d", i), []byte("room"), 0)
+			}
+			return c.SendStatus(fiber.StatusCreated)
+		}).
+		Patch(func(c fiber.Ctx) error {
+			data := new(struct {
+				ID       string `json:"id"`
+				Location string `json:"location"`
+			})
+			if err := c.Bind().Body(data); err != nil {
+				return err
+			}
+			err := storage.Delete(fmt.Sprintf("location-%s", data.Location))
+			if err != nil {
+				return err
+			}
+			err = storage.Set(fmt.Sprintf("location-%s", data.ID), []byte(data.Location), 0)
 			if err != nil {
 				return err
 			}
