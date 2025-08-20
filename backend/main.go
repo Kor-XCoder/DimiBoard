@@ -13,6 +13,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/helmet"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/storage/redis/v3"
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -38,6 +39,7 @@ func main() {
 	})
 
 	type Notice struct {
+		ID       string `json:"id"`
 		Title    string `json:"title"`
 		Type     string `json:"type"`
 		Deadline string `json:"deadline"`
@@ -63,6 +65,7 @@ func main() {
 						return err
 					}
 					result = append(result, Notice{
+						ID:       value.ID,
 						Title:    value.Title,
 						Type:     value.Type,
 						Deadline: value.Deadline,
@@ -84,17 +87,26 @@ func main() {
 			if err != nil {
 				return err
 			}
-			_, err = storage.Get(fmt.Sprintf("notice-%s", notice.Title))
-			if err == nil {
-				return c.Status(fiber.StatusConflict).JSON(fiber.Map{
-					"message": "Notice already exists",
-				})
-			}
-			err = storage.Set(fmt.Sprintf("notice-%s", notice.Title), data, time.Until(deadline))
+			uuid := uuid.New().String()
+			err = storage.Set(fmt.Sprintf("notice-%s", uuid), data, time.Until(deadline))
 			if err != nil {
 				return err
 			}
-			return c.JSON(notice)
+			return c.SendStatus(fiber.StatusCreated)
+		}).
+		Delete(func(c fiber.Ctx) error {
+			data := new(struct {
+				ID string `json:"id"`
+			})
+			err := c.Bind().Body(data)
+			if err != nil {
+				return err
+			}
+			err = storage.Delete(fmt.Sprintf("notice-%s", data.ID))
+			if err != nil {
+				return err
+			}
+			return c.SendStatus(fiber.StatusNoContent)
 		})
 	log.Infof("Server starting on port %d", 8082)
 	log.Fatal(app.Listen(":8082", fiber.ListenConfig{
