@@ -222,7 +222,7 @@ const newNotice = ref('')
 function addNotice(){
   const t = newNotice.value.trim()
   if (!t) return
-  notices.value.unshift(t)
+  notices.value.unshift({ title: t, type: 'local', deadline: new Date() })
   newNotice.value = ''
 }
 function removeNotice(i: number){
@@ -246,12 +246,12 @@ onMounted(async () => {
   clockTimer = window.setInterval(tick, 1000)
   scheduleConfetti();
 
-  const targetDate = new Date('2025-09-03')
-  const now = new Date()
-  const diff = targetDate - now;
-  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
-  ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : (daysLeft === 0 ? 'D-Day' : `D+${-daysLeft}`)
-
+  // 한국 시간(KST, UTC+9) 기준으로 날짜를 계산합니다.
+  const now = new Date();
+  const targetDate = new Date('2025-09-03T00:00:00+09:00'); // 목표 날짜를 KST 자정으로 설정
+  const diff = targetDate.getTime() - now.getTime();
+  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : (daysLeft === 0 ? 'D-Day' : `D+${-daysLeft}`);
 
   try {
     const response = await axios.get('https://back-dimiboard.coder.ac/notice')
