@@ -4,8 +4,8 @@ import HomeView from "../src/views/HomeView.vue";
 import AdminView from "../src/views/AdminView.vue";
 
 const routes = [
-  { path: "/", component: HomeView },
-  { path: "/judy", component: AdminView }
+  { path: "/judy", component: AdminView },
+  { path: "/:id?", component: HomeView }
 ];
 
 export const router = createRouter({

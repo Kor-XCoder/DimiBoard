@@ -2,7 +2,7 @@
   <div class="wrap" ref="wrapEl">
     <header class="topbar">
       <div class="title">
-        <h1>1학년 4반 인원 현황</h1>
+        <h1>{{ grade }}학년 {{ban}}반 인원 현황</h1>
         <span class="sub" style="color: white; font-size: 1.4rem; margin-left: 1rem;">{{ nowText }}</span>
       </div>
       <div class="toolbar">
@@ -92,7 +92,7 @@
         </div>
         
         <!-- 공지사항 -->
-        <div class="notice">
+        <div class="notice" v-if="!ID">
           <span style="font-weight: 600; font-size: 1.1rem;">수행평가 및 공지사항</span>
             <ul class="notice-ul">
               <li v-for="(notice, index) in notices" :key="index">
@@ -119,6 +119,9 @@
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import JSConfetti from 'js-confetti'
 import axios from 'axios'
+
+import { useRoute } from 'vue-router';
+
 // ---- 상수/타입
 type LaneId = 'room' | 'restroom' | 'hall' | 'out' | 'club' | 'etc' | 'after'
 const TOTAL = 30
@@ -129,6 +132,8 @@ const laneTitles: Record<LaneId,string> = {
 }
 const ddayText = ref("");
 const confetti = new JSConfetti()
+const route = useRoute();
+const ID = computed(() => route.params.id)
 
 function showConfetti() {
   confetti.addConfetti()
@@ -156,9 +161,19 @@ function scheduleConfetti() {
 }
 
 let timer: number | undefined
+const grade = ref(1);
+const ban = ref(4);
 
 // 10초 마다 실행
 onMounted(() => {
+  console.log(route.params.id);
+
+  if (ID.value && typeof ID.value === 'string') {
+    const idAsNumber = parseInt(ID.value, 10);
+    grade.value = Math.floor(idAsNumber / 10);
+    ban.value = idAsNumber % 10;
+  }
+
   timer = window.setInterval(async () => {
     // 9/3까지의 남은 날짜 계산
     const targetDate = new Date('2025-09-03')
