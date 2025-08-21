@@ -124,7 +124,7 @@ import { useRoute } from 'vue-router';
 
 // ---- 상수/타입
 type LaneId = 'room' | 'restroom' | 'hall' | 'out' | 'club' | 'etc' | 'after'
-const TOTAL = 30
+let TOTAL = 30
 const LANES: LaneId[] = ['room','after','club','hall','restroom','out','etc']
 const STORAGE_KEY = 'ystudy_board_state_v1'
 const laneTitles: Record<LaneId,string> = {
@@ -165,6 +165,29 @@ const grade = ref(1);
 const ban = ref(4);
 
 // 10초 마다 실행
+
+
+// ---- 상태
+type BoardState = Record<LaneId, number[]>
+const defaultState = (): BoardState => {
+  const s: BoardState = { room:[], restroom:[], hall:[], out:[], club:[], etc:[], after: [] }
+  for (let n=1;n<=TOTAL;n++) s.room.push(n)
+  return s
+}
+const loadState = (): BoardState => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return defaultState()
+    const parsed = JSON.parse(raw) as Partial<BoardState>
+    // 무결성 보정: 누락된 번호는 교실로
+    const seen = new Set<number>()
+    LANES.forEach(l => (parsed[l] ??= []).forEach(v => seen.add(v!)))
+    for (let i=1;i<=TOTAL;i++) if (!seen.has(i)) (parsed.room as number[]).push(i)
+    return parsed as BoardState
+  } catch { return defaultState() }
+}
+
+let lanes = reactive<BoardState>(loadState())
 onMounted(() => {
   console.log(route.params.id);
 
@@ -172,6 +195,11 @@ onMounted(() => {
     const idAsNumber = parseInt(ID.value, 10);
     grade.value = Math.floor(idAsNumber / 10);
     ban.value = idAsNumber % 10;
+
+    if (ban.value == 2) {
+      TOTAL = 32;
+      lanes = reactive<BoardState>(loadState())
+    }
   }
 
   timer = window.setInterval(async () => {
@@ -195,28 +223,6 @@ onMounted(() => {
 onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
-
-
-// ---- 상태
-type BoardState = Record<LaneId, number[]>
-const defaultState = (): BoardState => {
-  const s: BoardState = { room:[], restroom:[], hall:[], out:[], club:[], etc:[], after: [] }
-  for (let n=1;n<=TOTAL;n++) s.room.push(n)
-  return s
-}
-const loadState = (): BoardState => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return defaultState()
-    const parsed = JSON.parse(raw) as Partial<BoardState>
-    // 무결성 보정: 누락된 번호는 교실로
-    const seen = new Set<number>()
-    LANES.forEach(l => (parsed[l] ??= []).forEach(v => seen.add(v!)))
-    for (let i=1;i<=TOTAL;i++) if (!seen.has(i)) (parsed.room as number[]).push(i)
-    return parsed as BoardState
-  } catch { return defaultState() }
-}
-const lanes = reactive<BoardState>(loadState())
 
 // 파생값
 const present = computed(() => lanes.room.length)
