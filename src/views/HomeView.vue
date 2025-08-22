@@ -391,7 +391,7 @@ const sorted = (arr: number[]) => [...arr].sort((a,b)=>a-b)
 function moveTo(num: number, to: LaneId) {
   let reasonText: string | null = null
   if (to === 'etc'){
-    reasonText = (prompt('기타로 이동하는 사유를 입력하세요 (예: 보건실, 상담 등)') || '').trim()
+    reasonText = (prompt('기타로 이동하는 사유를 입력하세요.') || '').trim()
     if (!reasonText){
       alert('사유를 입력해야 기타로 이동할 수 있습니다.')
       return
