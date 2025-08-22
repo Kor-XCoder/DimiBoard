@@ -1,4 +1,7 @@
 <template>
+  <div class="fireworks-container" style="position:fixed; left:0;top:0; width: 100%;height: 100%;">
+
+  </div>
   <div class="wrap" ref="wrapEl">
     <header class="topbar">
       <div class="title">
@@ -120,6 +123,8 @@ import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import JSConfetti from 'js-confetti'
 import axios from 'axios'
 
+import { Fireworks } from 'fireworks-js'
+
 import { useRoute } from 'vue-router';
 
 // ---- 상수/타입
@@ -135,8 +140,62 @@ const confetti = new JSConfetti()
 const route = useRoute();
 const ID = computed(() => route.params.id)
 
-function showConfetti() {
-  confetti.addConfetti()
+async function showConfetti() {
+  const container = document.querySelector('.fireworks-container')
+  if (container) {
+    const fireworks = new Fireworks(container, {
+      autoresize: true,
+      opacity: 0.1,
+      acceleration: 1.05,
+      friction: 0.97,
+      gravity: 1.5,
+      particles: 200,
+      traceLength: 6,
+      traceSpeed: 5,
+      explosion: 10,
+      intensity: 30,
+      flickering: 50,
+      lineStyle: 'round',
+      hue: {
+        min: 0,
+        max: 360
+      },
+      delay: {
+        min: 30,
+        max: 60
+      },
+      rocketsPoint: {
+        min: 50,
+        max: 50
+      },
+      lineWidth: {
+        explosion: {
+          min: 1,
+          max: 6
+        },
+        trace: {
+          min: 1,
+          max: 2
+        }
+      },
+      brightness: {
+        min: 50,
+        max: 80
+      },
+      decay: {
+        min: 0.015,
+        max: 0.03
+      },
+      mouse: {
+        click: true,
+        move: false,
+        max: 3
+      }
+    })
+    fireworks.start()
+    await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000));
+    fireworks.stop()
+  }
 }
 
 let confettiTimer: number | null = null;
@@ -188,7 +247,7 @@ const loadState = (): BoardState => {
 }
 
 let lanes = reactive<BoardState>(loadState())
-onMounted(() => {
+onMounted(async () => {
   console.log(route.params.id);
 
   if (ID.value && typeof ID.value === 'string') {
