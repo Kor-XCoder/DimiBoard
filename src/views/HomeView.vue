@@ -70,16 +70,35 @@
                 <div class="lane-count"><span>{{ lanes[lane].length }}명</span></div>
               </div>
               <div class="stack">
-                <button v-for="n in sorted(lanes[lane])" :key="`${lane}-${n}`"
-                        class="chip"
-                        :class="{ highlight: searchNum === n }"
-                        draggable="true"
-                        @dragstart="onChipDragStart(n, $event)"
-                        @dragend="onChipDragEnd"
-                        @click="openMenu($event, n)"
-                        @pointerdown="onChipPointerDown(n, $event)">
-                  {{ n }}
-                </button>
+                <!-- 일반 레인: 기존 칩 버튼 렌더 -->
+                <template v-if="lane !== 'etc'">
+                  <button v-for="n in sorted(lanes[lane])" :key="`${lane}-${n}`"
+                          class="chip"
+                          :class="{ highlight: searchNum === n }"
+                          draggable="true"
+                          @dragstart="onChipDragStart(n, $event)"
+                          @dragend="onChipDragEnd"
+                          @click="openMenu($event, n)"
+                          @pointerdown="onChipPointerDown(n, $event)">
+                    {{ n }}
+                  </button>
+                </template>
+
+                <!-- 기타 레인: 번호+사유 카드 렌더 -->
+                <template v-else>
+                  <div v-for="n in sorted(lanes.etc)" :key="`etc-${n}`"
+                       class="chip chip-etc"
+                       :class="{ highlight: searchNum === n }"
+                       :data-num="n"
+                       draggable="true"
+                       @dragstart="onChipDragStart(n, $event)"
+                       @dragend="onChipDragEnd"
+                       @click="openMenu($event, n)"
+                       @pointerdown="onChipPointerDown(n, $event)">
+                    <div class="num">{{ n }}</div>
+                    <div class="reason">{{ reasons[n] || '사유 없음' }}</div>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
@@ -128,12 +147,12 @@ import { Fireworks } from 'fireworks-js'
 import { useRoute } from 'vue-router';
 
 // ---- 상수/타입
-type LaneId = 'room' | 'restroom' | 'hall' | 'out' | 'club' | 'etc' | 'after'
-let TOTAL = 30
-const LANES: LaneId[] = ['room','after','club','hall','restroom','out','etc']
+type LaneId = 'room' | 'restroom' | 'hall' | 'club' | 'etc' | 'after'
+const TOTAL = 30
+const LANES: LaneId[] = ['room','after','club','hall','restroom','etc']
 const STORAGE_KEY = 'ystudy_board_state_v1'
 const laneTitles: Record<LaneId,string> = {
-  room:'교실', after:'방과후', club:'동아리', hall:'복도', restroom:'화장실/정수기', out:'외출',  etc:'기타'
+  room:'교실', after:'방과후', club:'동아리', hall:'복도', restroom:'화장실/정수기', etc:'기타'
 }
 const ddayText = ref("");
 const confetti = new JSConfetti()
@@ -229,7 +248,7 @@ const ban = ref(4);
 // ---- 상태
 type BoardState = Record<LaneId, number[]>
 const defaultState = (): BoardState => {
-  const s: BoardState = { room:[], restroom:[], hall:[], out:[], club:[], etc:[], after: [] }
+  const s: BoardState = { room:[], restroom:[], hall:[], club:[], etc:[], after: [] }
   for (let n=1;n<=TOTAL;n++) s.room.push(n)
   return s
 }
@@ -238,6 +257,7 @@ const loadState = (): BoardState => {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return defaultState()
     const parsed = JSON.parse(raw) as Partial<BoardState>
+    const legacyOut = (parsed as any).out as number[] | undefined; if (Array.isArray(legacyOut)) { (parsed.etc ??= []).push(...legacyOut) }
     // 무결성 보정: 누락된 번호는 교실로
     const seen = new Set<number>()
     LANES.forEach(l => (parsed[l] ??= []).forEach(v => seen.add(v!)))
@@ -248,19 +268,6 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
-  console.log(route.params.id);
-
-  if (ID.value && typeof ID.value === 'string') {
-    const idAsNumber = parseInt(ID.value, 10);
-    grade.value = Math.floor(idAsNumber / 10);
-    ban.value = idAsNumber % 10;
-
-    if (ban.value == 2) {
-      TOTAL = 32;
-      lanes = reactive<BoardState>(loadState())
-    }
-  }
-
   timer = window.setInterval(async () => {
     // 9/3까지의 남은 날짜 계산
     const targetDate = new Date('2025-09-03')
@@ -316,6 +323,34 @@ const searchNum = computed(() => {
   return Number.isFinite(n) ? n : null
 })
 
+// ===== 기타(etc) 사유: 번호 → 사유 텍스트 =====
+const REASON_KEY = 'ystudy_board_reasons_v2'
+const reasons = reactive<Record<number, string>>({})
+
+// 저장: 텍스트만 보관
+watch(reasons, (v) => {
+  const out: Record<number, string> = {}
+  for (const [k, val] of Object.entries(v)){
+    const num = Number(k)
+    if (Number.isFinite(num) && typeof val === 'string') out[num] = val
+  }
+  localStorage.setItem(REASON_KEY, JSON.stringify(out))
+}, { deep: true })
+
+// 로드
+onMounted(() => {
+  try{
+    const raw = localStorage.getItem(REASON_KEY)
+    if (raw){
+      const parsed = JSON.parse(raw) as Record<string, string>
+      for (const [k, val] of Object.entries(parsed)){
+        const num = Number(k)
+        if (Number.isFinite(num)) reasons[num] = val
+      }
+    }
+  }catch{}
+})
+
 // 시계
 const nowText = ref('')
 let clockTimer: number | null = null
@@ -354,11 +389,27 @@ const sorted = (arr: number[]) => [...arr].sort((a,b)=>a-b)
 
 // 이동 공용
 function moveTo(num: number, to: LaneId) {
+  let reasonText: string | null = null
+  if (to === 'etc'){
+    reasonText = (prompt('기타로 이동하는 사유를 입력하세요 (예: 보건실, 상담 등)') || '').trim()
+    if (!reasonText){
+      alert('사유를 입력해야 기타로 이동할 수 있습니다.')
+      return
+    }
+  }
+  // 모든 레인에서 제거 후 대상 레인에 추가
   LANES.forEach(l => {
     const idx = lanes[l].indexOf(num)
     if (idx >= 0) lanes[l].splice(idx, 1)
   })
   lanes[to].push(num)
+
+  // 사유 관리
+  if (to === 'etc' && reasonText){
+    reasons[num] = reasonText
+  } else {
+    if (reasons[num]) delete reasons[num]
+  }
   closeMenu()
 }
 
@@ -368,11 +419,16 @@ function allIn() {
   const s = defaultState()
   s.room = all
   Object.assign(lanes, s)
+  // 사유 초기화
+  for (const k of Object.keys(reasons)) delete (reasons as any)[k as any]
 }
 function resetAll() {
   if (confirm('모든 배치를 초기화하고 저장을 삭제하시겠습니까?')) {
     localStorage.removeItem(STORAGE_KEY)
     Object.assign(lanes, defaultState())
+    // 사유 초기화 + 저장 제거
+    for (const k of Object.keys(reasons)) delete (reasons as any)[k as any]
+    localStorage.removeItem(REASON_KEY)
   }
 }
 
@@ -515,6 +571,13 @@ defineExpose({ TOTAL, LANES, lanes, moveTo, resetAll, allIn, present, absent, la
 <style>
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
+/* Fireworks 캔버스가 상호작용을 가로채지 않도록 */
+.fireworks-container, .fireworks-container *{ pointer-events: none !important; }
+.fireworks-container{ z-index: 0; }
+/* 실제 UI를 위로 올림 */
+.wrap{ position: relative; z-index: 1; }
+/* Safari 등에서 버튼 요소 드래그 안정화 */
+.chip{ -webkit-user-drag: element; }
 :root{
   --bg:#0f1115; --panel:#171922; --muted:#2a2f3a; --line:#222735;
   --text:#e8ecf3; --sub:#ced3db; --accent:#5ac8fa; --shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
@@ -607,13 +670,15 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .lane-title span{font-weight:600; font-size: 1.2rem;}
 
 .lane-count{color:var(--sub); font-size:1rem}
-.lane[data-lane="hall"],
-.lane[data-lane="restroom"],
-.lane[data-lane="out"],
-.lane[data-lane="etc"] {
-  grid-row: 2;
-  grid-column: span 3; /* 열 너비(칸 수) */
-}
+ .lane[data-lane="hall"],
+ .lane[data-lane="restroom"]{
+   grid-row: 2;
+   grid-column: span 3;
+ }
+ .lane[data-lane="etc"]{
+   grid-row: 2;
+   grid-column: span 6;
+ }
 
 .lane[data-lane="after"],
 .lane[data-lane="club"]{
@@ -635,6 +700,14 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   font-weight: 700;
   /* border: 2px solid #db207d; */
 }
+
+/* 기타용 번호+사유 카드 */
+.chip-etc{
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+  min-width:100px; height:auto; padding:10px 12px; gap:6px;
+}
+.chip-etc .num{ font-size:18px; font-weight:800; line-height:1; }
+.chip-etc .reason{ font-size:14px; font-weight:600; line-height:1.25; opacity:.95; max-width:24ch; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .lane.drop-hint {
   border-color:#3b82f6;
   box-shadow:0 0 0 2px rgba(59,130,246,.25) inset;
@@ -676,7 +749,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   .lane.room{ grid-column: 1 / -1 }
   .grid{ grid-template-columns: repeat(5, minmax(0,1fr)) }
   .lane[data-lane="hall"], .lane[data-lane="restroom"]{ grid-row: auto; }
-  .lane[data-lane="out"], .lane[data-lane="etc"]{ grid-row: auto; }
+  .lane[data-lane="etc"]{ grid-row: auto; }
   .board{ grid-template-columns: 1fr; }
   .lane{ grid-column: auto; }
   .lane[data-lane="after"], .lane[data-lane="club"]{ grid-row: auto; grid-column: auto; }
