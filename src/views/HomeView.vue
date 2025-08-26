@@ -160,61 +160,20 @@ const route = useRoute();
 const ID = computed(() => route.params.id)
 
 async function showConfetti() {
-  const container = document.querySelector('.fireworks-container')
-  if (container) {
-    const fireworks = new Fireworks(container, {
-      autoresize: true,
-      opacity: 0.1,
-      acceleration: 1.05,
-      friction: 0.97,
-      gravity: 1.5,
-      particles: 200,
-      traceLength: 6,
-      traceSpeed: 5,
-      explosion: 10,
-      intensity: 30,
-      flickering: 50,
-      lineStyle: 'round',
-      hue: {
-        min: 0,
-        max: 360
-      },
-      delay: {
-        min: 30,
-        max: 60
-      },
-      rocketsPoint: {
-        min: 50,
-        max: 50
-      },
-      lineWidth: {
-        explosion: {
-          min: 1,
-          max: 6
-        },
-        trace: {
-          min: 1,
-          max: 2
-        }
-      },
-      brightness: {
-        min: 50,
-        max: 80
-      },
-      decay: {
-        min: 0.015,
-        max: 0.03
-      },
-      mouse: {
-        click: true,
-        move: false,
-        max: 3
-      }
-    })
-    fireworks.start()
-    await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000));
-    fireworks.stop()
-  }
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
+  confetti.addConfetti()
+  await new Promise(resolve => setTimeout(resolve, 300));
 }
 
 let confettiTimer: number | null = null;
@@ -268,6 +227,7 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
+  showConfetti()
   timer = window.setInterval(async () => {
     // 9/3까지의 남은 날짜 계산
     const targetDate = new Date('2025-09-03')
