@@ -227,7 +227,6 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
-  showConfetti()
   timer = window.setInterval(async () => {
     // 9/3까지의 남은 날짜 계산
     const targetDate = new Date('2025-09-03')
