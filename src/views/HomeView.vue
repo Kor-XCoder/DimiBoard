@@ -109,7 +109,7 @@
       <aside class="aside aside-announcement">
         <!-- 디데이 블록 -->
         <div class="dday">
-          <span>9월 모의고사</span>
+          <span>1차 지필평가</span>
           <h1>{{ ddayText }}</h1>
         </div>
         
@@ -229,7 +229,7 @@ let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
   timer = window.setInterval(async () => {
     // 9/3까지의 남은 날짜 계산
-    const targetDate = new Date('2025-09-03T00:00:00+09:00'); // KST
+    const targetDate = new Date('2025-09-30T00:00:00+09:00'); // KST
     const now = new Date()
     const diff = targetDate.getTime() - now.getTime()
     const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
