@@ -117,8 +117,9 @@
         <div class="notice" v-if="!ID">
           <span style="font-weight: 600; font-size: 1.1rem;">수행평가 및 공지사항</span>
             <ul class="notice-ul">
-              <li v-for="(notice, index) in notices" :key="index">
-                <span>{{ notice.title }}</span>
+              <li v-for="(notice, index) in notices" :key="index" :class="colorClass(notice.type)">
+                <span class="type-tag">{{ notice.type || '기타' }}</span>
+                <span class="title">{{ notice.title }}</span>
               </li>
             </ul>
         </div>
@@ -264,6 +265,14 @@ type NoticeType = {
 
 const notices = ref<NoticeType[]>([])
 const newNotice = ref('')
+
+function colorClass(t?: string){
+  const s = t ?? ''
+  if (s === '국어' || s === '사회') return 'c-yellow'
+  if (s === '수학' || s === 'Python' || s === '인공지능') return 'c-green'
+  if (s === '영어' || s === '체육' || s === '미술') return 'c-red'
+  return 'c-black'
+}
 
 function addNotice(){
   const t = newNotice.value.trim()
@@ -756,11 +765,48 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   margin-top: 10px;
   border-radius: 7px;
   height: 2.2rem;
-  border: 1px solid #e89f0d;
-  background: rgba(232, 159, 13, 0.17);
+  border: 1px solid #e3e7ef;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .notice-ul li span {
   margin-left: 10px;
 }
+
+.type-tag{
+  display:inline-flex;
+  align-items:center;
+  height:1.6rem;
+  padding:0 .5rem;
+  border-radius:999px;
+  font-size:.85rem;
+  background:#f3f4f6;
+  color:#374151;
+  border:1px solid #d1d5db;
+}
+
+.notice-ul li .title{
+  margin-left:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* === Subject color variations === */
+/* 국어/사회 → 노란색 */
+.notice-ul li.c-yellow{ border-color:#eab308; background:rgba(234,179,8,.15); }
+.notice-ul li.c-yellow .type-tag{ background:#ebda98; border-color:#f5c46b; color:#7a5d00 }
+
+/* 수학/Python/인공지능 → 초록색 */
+.notice-ul li.c-green{ border-color:#16a34a; background:rgba(22,163,74,.12); }
+.notice-ul li.c-green .type-tag{ background:#dcfce7; border-color:#86efac; color:#065f46 }
+
+/* 영어/체육/미술 → 빨간색 */
+.notice-ul li.c-red{ border-color:#dc2626; background:rgba(220,38,38,.12); }
+.notice-ul li.c-red .type-tag{ background:#f3afaf; border-color:#fecaca; color:#7f1d1d }
+
+/* 기타 → 검은색(다크) */
+.notice-ul li.c-black{ border-color:#111827; background:rgba(17, 24, 39, 0.738); color:#ffffff }
+.notice-ul li.c-black .type-tag{ background:#111827; border-color:#374151; color:#ffffff }
+.notice-ul li.c-black .title{ color:#ffffff }
 </style>
