@@ -108,10 +108,13 @@ function clearNotices(){
 // 과목에 따른 색상 클래스 반환 함수
 function colorClass(t){
   const s = t || ''
-  if (s === '국어' || s === '사회') return 'c-yellow'
-  if (s === '수학' || s === 'Python' || s === '인공지능') return 'c-green'
-  if (s === '영어' || s === '체육' || s === '미술') return 'c-red'
-  return 'c-black'
+  if (s === '국어') return 'c-orange'
+  if (s === '수학') return 'c-green'
+  if (s === '사회') return 'c-yellow'
+  if (s === '과학') return 'c-blue'
+  if (s === '영어') return 'c-red'
+  if (s === 'Python' || s === '인공지능' || s === '기타') return 'c-dark'
+  return ''
 }
 </script>
 
@@ -174,16 +177,23 @@ function colorClass(t){
 .notice-ul li.c-yellow{ border-color:#eab308; background:rgba(234,179,8,.15); }
 .notice-ul li.c-yellow .type-tag{ background:#ebda98; border-color:#f5c46b; color:#7a5d00 }
 
-/* 수학/Python/인공지능 → 초록색 */
+/* 수학 → 초록색 */
 .notice-ul li.c-green{ border-color:#16a34a; background:rgba(22,163,74,.12); }
 .notice-ul li.c-green .type-tag{ background:#dcfce7; border-color:#86efac; color:#065f46 }
 
-/* 영어/체육/미술 → 빨간색 */
-.notice-ul li.c-red{ border-color:#dc2626; background:rgba(220,38,38,.12); }
-.notice-ul li.c-red .type-tag{ background:#f3afaf; border-color:#fecaca; color:#7f1d1d }
+/* 과학 → 파란색 */
+.notice-ul li.c-blue{ border-color:#2563eb; background:rgba(37,99,235,.12); }
+.notice-ul li.c-blue .type-tag{ background:#95bdf1; border-color:#93c5fd; color:#1e3a8a }
 
-/* 기타 → 검은색(다크) */
+/* 미술/체육 → 보라색 */
+.notice-ul li.c-purple{ border-color:#7c3aed; background:rgba(124,58,237,.12); }
+.notice-ul li.c-purple .type-tag{ background:#ede9fe; border-color:#c4b5fd; color:#4c1d95 }
+
+/* 파이썬/인공지능/기타 → 검은색(다크) */
 .notice-ul li.c-black{ border-color:#111827; background:rgba(17, 24, 39, 0.738); color:#ffffff }
 .notice-ul li.c-black .type-tag{ background:#111827; border-color:#374151; color:#ffffff }
 .notice-ul li.c-black .title{ color:#ffffff }
+/* 영어 → 빨간색 */
+.notice-ul li.c-red{ border-color:#dc2626; background:rgba(220,38,38,.12); }
+.notice-ul li.c-red .type-tag{ background:#f3afaf; border-color:#fecaca; color:#7f1d1d }
 </style>
