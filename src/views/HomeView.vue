@@ -182,7 +182,7 @@ function scheduleConfetti() {
 
   const now = new Date();
   const targetTime = new Date(now);
-  targetTime.setHours(22, 50, 0, 0); // 오후 10시 50분
+  targetTime.setHours(23, 00, 0, 0); // 오후 11시
 
   // 이미 지났으면 내일로 설정
   if (now > targetTime) {
