@@ -182,11 +182,20 @@ function scheduleConfetti() {
 
   const now = new Date();
   const targetTime = new Date(now);
-  targetTime.setHours(22, 50, 0, 0); // 오후 10시 50분
+  const setTime = () => {
+    if (targetTime.getDay() === 6 || targetTime.getDay() === 0) {
+      targetTime.setHours(22, 30, 0, 0); // 주말은 오후 10시 30분
+    }
+    else {
+      targetTime.setHours(23, 0, 0, 0); // 평일은 오후 11시 00분
+    }
+  };
+  setTime();
 
   // 이미 지났으면 내일로 설정
   if (now > targetTime) {
     targetTime.setDate(targetTime.getDate() + 1);
+    setTime();
   }
 
   const delay = targetTime.getTime() - now.getTime();
