@@ -236,22 +236,19 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
-  timer = window.setInterval(async () => {
-    // 9/3까지의 남은 날짜 계산
-    const targetDate = new Date('2025-12-09T00:00:00+09:00'); // KST
-    const now = new Date()
-    const diff = targetDate.getTime() - now.getTime()
-    const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
-    ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : (daysLeft === 0 ? 'D-Day' : `D+${-daysLeft}`)
+  const targetDate = new Date('2025-12-09T00:00:00+09:00'); // KST
+  const now = new Date()
+  const diff = targetDate.getTime() - now.getTime()
+  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
+  ddayText.value = daysLeft > 0 ? `D-${daysLeft}` : (daysLeft === 0 ? 'D-Day' : `D+${-daysLeft}`)
 
-    try {
-      const response = await axios.get('https://back-dimiboard.coder.ac/notice')
-      console.log(response.data)
-      notices.value = response.data
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }, 10000)
+  try {
+    const response = await axios.get('https://back-dimiboard.coder.ac/notice')
+    console.log(response.data)
+    notices.value = response.data
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
 })
 
 onUnmounted(() => {
