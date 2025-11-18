@@ -1,8 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"strings"
+	"os"
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v3"
@@ -13,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/storage/redis/v3"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
@@ -37,6 +39,29 @@ func main() {
 		Password: "",
 	})
 
+	postgresDSN := os.Getenv("POSTGRES_DSN")
+	if postgresDSN == "" {
+		postgresDSN = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+	}
+
+	ctx := context.Background()
+	db, err := pgxpool.New(ctx, postgresDSN)
+	if err != nil {
+		log.Fatalf("failed to connect to postgres: %v", err)
+	}
+	defer db.Close()
+
+	_, err = db.Exec(ctx, `
+        CREATE TABLE IF NOT EXISTS notices (
+                id UUID PRIMARY KEY,
+                title TEXT NOT NULL,
+                type TEXT NOT NULL,
+                deadline TEXT
+        )`)
+	if err != nil {
+		log.Fatalf("failed to ensure notices table: %v", err)
+	}
+
 	type Notice struct {
 		ID       string `json:"id"`
 		Title    string `json:"title"`
@@ -56,29 +81,21 @@ func main() {
 	app.Route("/notice").
 		Get(func(c fiber.Ctx) error {
 			var result []Notice
-			keys, err := storage.Keys()
+			rows, err := db.Query(ctx, "SELECT id, title, type, deadline FROM notices")
 			if err != nil {
 				return err
 			}
+			defer rows.Close()
 
-			for _, key := range keys {
-				if strings.HasPrefix(string(key), "notice-") {
-					value := new(Notice)
-					raw, err := storage.Get(string(key))
-					if err != nil {
-						return err
-					}
-					err = sonic.Unmarshal(raw, value)
-					if err != nil {
-						return err
-					}
-					result = append(result, Notice{
-						ID:       strings.TrimPrefix(string(key), "notice-"),
-						Title:    value.Title,
-						Type:     value.Type,
-						Deadline: value.Deadline,
-					})
+			for rows.Next() {
+				var notice Notice
+				if err := rows.Scan(&notice.ID, &notice.Title, &notice.Type, &notice.Deadline); err != nil {
+					return err
 				}
+				result = append(result, notice)
+			}
+			if err := rows.Err(); err != nil {
+				return err
 			}
 			return c.JSON(result)
 		}).
@@ -87,16 +104,8 @@ func main() {
 			if err := c.Bind().Body(notice); err != nil {
 				return err
 			}
-			data, err := sonic.Marshal(notice)
-			if err != nil {
-				return err
-			}
-			// deadline, err := time.Parse("2006-01-02", notice.Deadline)
-			if err != nil {
-				return err
-			}
-			uuid := uuid.New().String()
-			err = storage.Set(fmt.Sprintf("notice-%s", uuid), data, 0)
+			notice.ID = uuid.New().String()
+			_, err := db.Exec(ctx, "INSERT INTO notices (id, title, type, deadline) VALUES ($1, $2, $3, $4)", notice.ID, notice.Title, notice.Type, notice.Deadline)
 			if err != nil {
 				return err
 			}
@@ -110,7 +119,7 @@ func main() {
 			if err != nil {
 				return err
 			}
-			err = storage.Delete(fmt.Sprintf("notice-%s", data.ID))
+			_, err = db.Exec(ctx, "DELETE FROM notices WHERE id = $1", data.ID)
 			if err != nil {
 				return err
 			}
