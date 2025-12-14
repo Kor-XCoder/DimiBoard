@@ -236,7 +236,7 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
-  const targetDate = new Date('2025-12-10T00:00:00+09:00'); // KST
+  const targetDate = new Date('2025-12-31T00:00:00+09:00'); // KST
   const now = new Date()
   const diff = targetDate.getTime() - now.getTime()
   const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
