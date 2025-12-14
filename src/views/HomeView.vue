@@ -540,9 +540,10 @@ defineExpose({ TOTAL, LANES, lanes, moveTo, resetAll, allIn, present, absent, la
 /* Safari 등에서 버튼 요소 드래그 안정화 */
 .chip{ -webkit-user-drag: element; }
 :root{
-  --bg:#0f1115; --panel:#171922; --muted:#2a2f3a; --line:#222735;
-  --text:#e8ecf3; --sub:#ced3db; --accent:#5ac8fa; --shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
-  --radius:16px; --chip:#ced1de3b; --chip-hover:#ced1de61;
+  --bg:#0a120f; --panel:rgba(12,23,19,.9); --muted:#1d2e26; --line:#2c4335;
+  --text:#f3f8f3; --sub:#d0e0d2; --accent:#f0c97b; --berry:#d94f62;
+  --shadow: 0 16px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+  --radius:16px; --chip:rgba(255,255,255,.08); --chip-hover:rgba(255,255,255,.14);
   --container-max: 1920px;
 }
 *{box-sizing:border-box}
@@ -554,24 +555,50 @@ html,body,#app{
   margin: 0;
 }
 
-body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color:var(--text);
-     font:15px/1.45 "Pretendard Variable", Pretendard,system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif}
+body{margin:0; background:
+    radial-gradient(120% 80% at 15% 20%, rgba(217,79,98,.18), transparent),
+    radial-gradient(80% 60% at 85% 15%, rgba(38,112,78,.18), transparent),
+    linear-gradient(180deg,#08130f 0%,#0b1612 45%,#0f1b16 100%);
+    color:var(--text);
+     font:15px/1.45 "Pretendard Variable", Pretendard,system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif;
+     position: relative;
+     overflow-x: hidden;}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(1px 1px at 12% 20%, rgba(255,255,255,.45), transparent),
+    radial-gradient(1.2px 1.2px at 42% 5%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.2px 1.2px at 70% 30%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,.4), transparent);
+  background-size: 260px 260px, 240px 240px, 220px 220px, 280px 280px;
+  animation: snowfall 18s linear infinite;
+  opacity: .4;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes snowfall {
+  from { background-position: 0 0, 50px -40px, 120px 40px, 10px -30px; }
+  to { background-position: 0 420px, 50px 380px, 120px 460px, 10px 360px; }
+}
 .wrap{display:grid; grid-template-columns: minmax(260px,320px) minmax(0,1fr); gap:16px; width:95vw; padding: 0;}
 .topbar{
   margin-top: 1rem;
   grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:16px;
-  background:var(--panel); border-radius:var(--radius); padding:14px 18px; box-shadow:var(--shadow); border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(40,74,56,.6), rgba(18,30,25,.95)); border-radius:var(--radius); padding:14px 18px; box-shadow:var(--shadow);
+  border:1px solid rgba(240,201,123,.22);
 }
 .title{display:flex; gap:14px; align-items:baseline}
-.title h1{margin:0; font-size:22px; font-weight:700}
-.title .sub{color:var(--sub); font-size:11px}
+.title h1{margin:0; font-size:22px; font-weight:800; letter-spacing: -.02em; color:var(--accent)}
+.title .sub{color:var(--sub); font-size:11px; padding:4px 10px; border-radius:999px; background:rgba(240,201,123,.14); border:1px solid rgba(240,201,123,.18)}
 .toolbar{display:flex; gap:8px; flex-wrap:wrap}
-.input{background:var(--panel); color:var(--text); border:1px solid var(--line); padding:10px 12px; border-radius:10px; outline:none; width:200px}
-.btn{background:var(--muted); color:var(--text); border:1px solid var(--line); padding:10px 12px; border-radius:10px; cursor:pointer}
-.btn:hover{background:#32394a}
+.input{background:rgba(22,35,30,.8); color:var(--text); border:1px solid rgba(240,201,123,.25); padding:10px 12px; border-radius:10px; outline:none; width:200px; box-shadow: inset 0 1px 0 rgba(255,255,255,.05)}
+.btn{background:var(--muted); color:var(--text); border:1px solid rgba(240,201,123,.18); padding:10px 12px; border-radius:10px; cursor:pointer; transition: transform .1s ease, background .2s ease, border-color .2s ease}
+.btn:hover{background:#2b4235; border-color:rgba(240,201,123,.3); transform: translateY(-1px)}
 .btn.ghost{background:transparent}
-.btn.ok{background:#1f3c33; border-color:#2a5c4e; color:#b7ffdf}
-.btn.warn{background:#3c2727; border-color:#5a3838; color:#ffd1d1}
+.btn.ok{background:linear-gradient(135deg,#1e3b2f,#244738); border-color:#3d6e54; color:#d9f6e7}
+.btn.warn{background:linear-gradient(135deg,#50232a,#632c32); border-color:#8b424c; color:#ffe4e4}
 
 .main{
   display:grid;
@@ -597,21 +624,21 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .counter{display:grid; gap:10px}
 
 .card{
-  background:#1a2030;
-  border:1px solid var(--line);
-  border-radius:12px; 
-  padding:12px; 
-  display:flex; 
-  align-items:center; 
+  background:linear-gradient(160deg, rgba(28,45,36,.85), rgba(23,34,29,.9));
+  border:1px solid rgba(240,201,123,.2);
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  align-items:center;
   justify-content:space-between;
   height: 3.2rem;
 }
 .label{color:var(--sub)}
 
-.pill{padding:6px 10px; border-radius:999px; font-weight:700; letter-spacing:.4px;}
-.pill.gray{background:#2e3444}
-.pill.green{background:#14372a; color:#baffd5}
-.pill.red{background:#3a1f1f; color:#ffc3c3}
+.pill{padding:6px 10px; border-radius:999px; font-weight:700; letter-spacing:.4px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08)}
+.pill.gray{background:rgba(255,255,255,.06); border:1px solid rgba(240,201,123,.18)}
+.pill.green{background:linear-gradient(135deg,#1f4c36,#255a41); color:#d9f6e7; border:1px solid #3f7b5c}
+.pill.red{background:linear-gradient(135deg,#5a272f,#6b2f36); color:#ffe2e2; border:1px solid #8b424c}
 .meta{margin-top:12px; color:var(--sub); font-size:12px}
 
 /* 보드 */
@@ -623,14 +650,14 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   grid-auto-flow: row dense;
 }
 .lane{
-  background:linear-gradient(180deg,#151926 0%,#121623 100%); border:1px dashed #5c698e;
-  border-radius:14px; padding:12px; min-height:220px; min-width:0;
+  background:linear-gradient(175deg, rgba(20,32,27,.92) 0%, rgba(12,19,16,.9) 100%); border:1px dashed rgba(240,201,123,.35);
+  border-radius:14px; padding:12px; min-height:220px; min-width:0; box-shadow: 0 18px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
 }
 .lane.room{ grid-row: 1; grid-column: 1 / span 4; }
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
-.lane-title span{font-weight:600; font-size: 1.2rem;}
+.lane-title span{font-weight:700; font-size: 1.2rem; color:var(--accent); letter-spacing:-.01em}
 
-.lane-count{color:var(--sub); font-size:1rem}
+.lane-count{color:var(--berry); font-size:1rem; font-weight:700}
  .lane[data-lane="hall"],
  .lane[data-lane="restroom"]{
    grid-row: 2;
@@ -653,8 +680,8 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .chip{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:12px;
-  background:var(--chip); border:1px solid var(--line); cursor:grab; user-select:none; font-weight:700;
-  transition:background .15s ease, transform .05s ease;
+  background:linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.05)); border:1px solid rgba(240,201,123,.22); cursor:grab; user-select:none; font-weight:700;
+  transition:background .15s ease, transform .05s ease, border-color .2s ease, box-shadow .2s ease;
   color: white;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 19px;
@@ -670,15 +697,15 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .chip-etc .num{ font-size:18px; font-weight:800; line-height:1; }
 .chip-etc .reason{ font-size:14px; font-weight:600; line-height:1.25; opacity:.95; max-width:24ch; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .lane.drop-hint {
-  border-color:#3b82f6;
-  box-shadow:0 0 0 2px rgba(59,130,246,.25) inset;
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(240,201,123,.25) inset, 0 0 24px rgba(240,201,123,.12);
 }
 
-.chip:hover{ background:var(--chip-hover) }
+.chip:hover{ background:var(--chip-hover); border-color:rgba(240,201,123,.4); box-shadow:0 8px 14px rgba(0,0,0,.35); }
 .chip.highlight {
   outline:2px solid var(--accent);
   outline-offset:2px;
-  filter:drop-shadow(0 0 10px rgba(90,200,250,.5));
+  filter:drop-shadow(0 0 10px rgba(240,201,123,.55));
 }
 
 /* 터치/펜 드래그용 고스트 요소 */
@@ -698,11 +725,11 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
 .wrap.dragging, .wrap.dragging .board, .wrap.dragging .chip { touch-action: none; }
 
 .menu{
-  position:fixed; z-index:50; background:#0f1118; border:1px solid #283040; border-radius:12px; padding:6px; width:150px;
+  position:fixed; z-index:50; background:rgba(10,17,14,.95); border:1px solid rgba(240,201,123,.25); border-radius:12px; padding:6px; width:150px;
   box-shadow:0 12px 28px rgba(0,0,0,.5)
 }
 .menu button{ width:100%; border:0; background:transparent; color:var(--text); text-align:left; padding:10px 12px; border-radius:8px; cursor:pointer }
-.menu button:hover{ background:#1c2130 }
+.menu button:hover{ background:rgba(240,201,123,.12) }
 
 @media (max-width: 1100px){
   .wrap{ grid-template-columns: 1fr }
@@ -758,8 +785,8 @@ body{margin:0; background:linear-gradient(180deg,#0b0d12 0%,#0f1115 100%); color
   margin-top: 10px;
   border-radius: 7px;
   height: 2.2rem;
-  border: 1px solid #e89f0d;
-  background: rgba(232, 159, 13, 0.17);
+  border: 1px solid rgba(240, 201, 123, 0.5);
+  background: linear-gradient(120deg, rgba(240, 201, 123, 0.18), rgba(52, 90, 70, 0.18));
 }
 
 .notice-ul li span {
