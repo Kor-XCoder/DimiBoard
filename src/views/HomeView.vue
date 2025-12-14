@@ -109,7 +109,7 @@
       <aside class="aside aside-announcement">
         <!-- 디데이 블록 -->
         <div class="dday">
-          <span>2차 지필평가</span>
+          <span>END<span>
           <h1>{{ ddayText }}</h1>
         </div>
         
