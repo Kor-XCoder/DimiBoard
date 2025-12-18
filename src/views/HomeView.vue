@@ -115,15 +115,6 @@
           <span>END</span>
           <h1>{{ ddayText }}</h1>
         </div>
-
-        <div class="decor-tray" aria-hidden="true">
-          <div class="decor-item bell">🔔</div>
-          <div class="decor-item candy">🍭</div>
-          <div class="decor-item stocking">🧦</div>
-          <div class="decor-item gift">🎁</div>
-        </div>
-
-        <div class="tree-card" role="img" aria-label="크리스마스 트리 장식"></div>
       </aside>
     </main>
   </div>
@@ -924,68 +915,9 @@ body{
   color:#fff7e8;
 }
 
-.decor-tray{
-  display:flex;
-  gap:8px;
-  margin-top: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(232,194,106,0.16), rgba(255,255,255,0.04));
-  border:1px solid rgba(232,194,106,0.45);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 6px 12px rgba(0,0,0,0.25);
-}
-.decor-item{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 8px 6px;
-  border-radius: 10px;
-  font-size: 1.35rem;
-  background: rgba(31,51,38,0.65);
-  color:#fff7e8;
-  border:1px solid rgba(255,255,255,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 6px 12px rgba(0,0,0,0.22);
-}
-.decor-item.bell{ background: radial-gradient(circle at 30% 30%, rgba(255,217,92,0.8), rgba(31,51,38,0.6)); }
-.decor-item.candy{ background: radial-gradient(circle at 70% 40%, rgba(255,154,213,0.8), rgba(31,51,38,0.6)); }
-.decor-item.stocking{ background: radial-gradient(circle at 30% 40%, rgba(255,77,79,0.8), rgba(31,51,38,0.6)); }
-.decor-item.gift{ background: radial-gradient(circle at 70% 60%, rgba(115,197,255,0.8), rgba(31,51,38,0.6)); }
 
 /* 공지사항 패널 */
 
-.tree-card{
-  margin-top: 1.1rem;
-  width: 100%;
-  height: 14rem;
-  border-radius: 14px;
-  background:
-    radial-gradient(circle at 50% 6%, rgba(255,227,149,0.9) 0%, rgba(255,227,149,0.2) 14%, transparent 18%),
-    radial-gradient(circle at 50% 32%, rgba(255,255,255,0.12) 0%, transparent 20%),
-    radial-gradient(circle at 36% 42%, rgba(255,77,79,0.8) 0%, transparent 22%),
-    radial-gradient(circle at 64% 45%, rgba(115,197,255,0.8) 0%, transparent 22%),
-    radial-gradient(circle at 44% 58%, rgba(84,227,158,0.85) 0%, transparent 20%),
-    radial-gradient(circle at 56% 62%, rgba(255,217,92,0.9) 0%, transparent 20%),
-    radial-gradient(ellipse at 50% 44%, rgba(25,84,55,0.9) 0%, rgba(25,84,55,0.4) 36%, transparent 44%),
-    radial-gradient(ellipse at 50% 64%, rgba(26,91,60,0.9) 0%, rgba(26,91,60,0.35) 34%, transparent 42%),
-    radial-gradient(ellipse at 50% 82%, rgba(27,99,66,0.9) 0%, rgba(27,99,66,0.35) 32%, transparent 40%),
-    linear-gradient(180deg, #5f3a1c 0%, #4b2c14 60%);
-  position: relative;
-  overflow:hidden;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
-  border:1px solid #33533e;
-}
-.tree-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 12px, transparent 12px 24px),
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 14%),
-    radial-gradient(circle at 80% 24%, rgba(255,255,255,0.08), transparent 16%);
-  pointer-events:none;
-  opacity:0.8;
-}
 
 @keyframes snow {
   0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
