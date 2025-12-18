@@ -116,15 +116,7 @@
           <h1>{{ ddayText }}</h1>
         </div>
         
-        <!-- 공지사항 -->
-        <div class="notice" v-if="!ID">
-          <span style="font-weight: 600; font-size: 1.1rem;">수행평가 및 공지사항</span>
-            <ul class="notice-ul">
-              <li v-for="(notice, index) in notices" :key="index">
-                <span>{{ notice.title }}</span>
-              </li>
-            </ul>
-        </div>
+        <div class="tree-card" role="img" aria-label="크리스마스 트리 장식"></div>
       </aside>
     </main>
   </div>
@@ -834,11 +826,12 @@ body{
     linear-gradient(145deg,#d8393c 0%,#b0292b 50%,#b92e3c 100%);
   border:2px solid #e8c26a; cursor:grab; user-select:none; font-weight:800;
   transition:background .15s ease, transform .05s ease, box-shadow .15s ease;
-  color: #fff5e6;
+  color: #fffdf6;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 19px;
   box-shadow: 0 10px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
   position: relative;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.45);
 }
 .chip::before{
   content:"";
@@ -846,21 +839,21 @@ body{
   inset:-1px;
   border-radius:inherit;
   background:
-    linear-gradient(90deg, transparent 44%, #f5dba0 44%, #f5dba0 56%, transparent 56%),
-    linear-gradient(0deg, transparent 44%, #f5dba0 44%, #f5dba0 56%, transparent 56%);
-  opacity:0.9;
+    linear-gradient(90deg, transparent 46%, rgba(245,219,160,0.7) 46%, rgba(245,219,160,0.95) 50%, transparent 54%),
+    linear-gradient(0deg, transparent 46%, rgba(245,219,160,0.7) 46%, rgba(245,219,160,0.95) 50%, transparent 54%);
+  opacity:0.6;
   pointer-events:none;
 }
 .chip::after{
   content:"";
   position:absolute;
   width:26px; height:12px;
-  top:8px; left:50%;
+  top:7px; left:50%;
   transform:translateX(-50%);
   background:
     radial-gradient(circle at 25% 50%, #f5dba0 40%, transparent 60%),
     radial-gradient(circle at 75% 50%, #f5dba0 40%, transparent 60%),
-    linear-gradient(90deg, transparent 45%, #e8c26a 45%, #e8c26a 55%, transparent 55%);
+    linear-gradient(90deg, transparent 46%, #e8c26a 46%, #e8c26a 54%, transparent 54%);
   opacity:0.9;
   filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
   pointer-events:none;
@@ -950,39 +943,37 @@ body{
 
 /* 공지사항 패널 */
 
-.notice {
-  margin-top: 1rem;
-  margin-left: 5px;
-  padding: 12px;
-  border-radius: 12px;
-  background:linear-gradient(145deg, rgba(31,51,38,0.9), rgba(22,36,28,0.95));
-  border:1px solid #33533e;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-}
-
-.notice-ul {
-  padding: 0;
-  margin: 0;
-  margin-top: 5px;
-}
-
-.notice-ul li {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  list-style-type: none;
+.tree-card{
+  margin-top: 1.1rem;
   width: 100%;
-  margin-top: 10px;
-  border-radius: 10px;
-  min-height: 2.4rem;
-  border: 1px solid #e8c26a;
-  background: linear-gradient(135deg, rgba(232,194,106,0.18), rgba(255,255,255,0.05));
-  color:#f7f2e8;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+  height: 14rem;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 50% 6%, rgba(255,227,149,0.9) 0%, rgba(255,227,149,0.2) 14%, transparent 18%),
+    radial-gradient(circle at 50% 32%, rgba(255,255,255,0.12) 0%, transparent 20%),
+    radial-gradient(circle at 36% 42%, rgba(255,77,79,0.8) 0%, transparent 22%),
+    radial-gradient(circle at 64% 45%, rgba(115,197,255,0.8) 0%, transparent 22%),
+    radial-gradient(circle at 44% 58%, rgba(84,227,158,0.85) 0%, transparent 20%),
+    radial-gradient(circle at 56% 62%, rgba(255,217,92,0.9) 0%, transparent 20%),
+    radial-gradient(ellipse at 50% 44%, rgba(25,84,55,0.9) 0%, rgba(25,84,55,0.4) 36%, transparent 44%),
+    radial-gradient(ellipse at 50% 64%, rgba(26,91,60,0.9) 0%, rgba(26,91,60,0.35) 34%, transparent 42%),
+    radial-gradient(ellipse at 50% 82%, rgba(27,99,66,0.9) 0%, rgba(27,99,66,0.35) 32%, transparent 40%),
+    linear-gradient(180deg, #5f3a1c 0%, #4b2c14 60%);
+  position: relative;
+  overflow:hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  border:1px solid #33533e;
 }
-
-.notice-ul li span {
-  margin-left: 10px;
+.tree-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 12px, transparent 12px 24px),
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 14%),
+    radial-gradient(circle at 80% 24%, rgba(255,255,255,0.08), transparent 16%);
+  pointer-events:none;
+  opacity:0.8;
 }
 
 @keyframes snow {
