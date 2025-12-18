@@ -1,4 +1,5 @@
 <template>
+  <div class="bg-tree" aria-hidden="true"></div>
   <div class="snow-overlay" aria-hidden="true"></div>
   <div class="fireworks-container" style="position:fixed; left:0;top:0; width: 100%;height: 100%;">
 
@@ -579,23 +580,27 @@ body{
   height: 64px;
   pointer-events:none;
   background:
-    radial-gradient(circle at 5% 50%, #ff4d4f 4px, transparent 7px),
-    radial-gradient(circle at 15% 50%, #ffd95c 4px, transparent 7px),
-    radial-gradient(circle at 25% 50%, #54e39e 4px, transparent 7px),
-    radial-gradient(circle at 35% 50%, #ff9ad5 4px, transparent 7px),
-    radial-gradient(circle at 45% 50%, #73c5ff 4px, transparent 7px),
-    radial-gradient(circle at 55% 50%, #ffd95c 4px, transparent 7px),
-    radial-gradient(circle at 65% 50%, #ff4d4f 4px, transparent 7px),
-    radial-gradient(circle at 75% 50%, #54e39e 4px, transparent 7px),
-    radial-gradient(circle at 85% 50%, #ffd95c 4px, transparent 7px),
-    radial-gradient(circle at 95% 50%, #ff9ad5 4px, transparent 7px),
+    radial-gradient(circle at 6% 38%, #ff4d4f 5px, transparent 7px),
+    radial-gradient(circle at 13% 46%, #ffd95c 5px, transparent 7px),
+    radial-gradient(circle at 21% 40%, #54e39e 5px, transparent 7px),
+    radial-gradient(circle at 29% 44%, #ff9ad5 5px, transparent 7px),
+    radial-gradient(circle at 37% 38%, #73c5ff 5px, transparent 7px),
+    radial-gradient(circle at 45% 46%, #ffd95c 5px, transparent 7px),
+    radial-gradient(circle at 53% 40%, #ff4d4f 5px, transparent 7px),
+    radial-gradient(circle at 61% 44%, #54e39e 5px, transparent 7px),
+    radial-gradient(circle at 69% 38%, #ffd95c 5px, transparent 7px),
+    radial-gradient(circle at 77% 44%, #ff9ad5 5px, transparent 7px),
+    radial-gradient(circle at 85% 40%, #73c5ff 5px, transparent 7px),
+    radial-gradient(circle at 93% 46%, #ffd95c 5px, transparent 7px),
     linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.08)),
-    repeating-linear-gradient(135deg, #1f3b2c 0 12px, #264a36 12px 24px);
+    repeating-linear-gradient(135deg, #1d3327 0 10px, #274232 10px 20px),
+    repeating-linear-gradient(45deg, rgba(34,63,46,0.9) 0 14px, rgba(41,79,55,0.9) 14px 28px);
   border-radius: 18px 18px 12px 12px;
   box-shadow: inset 0 -6px 12px rgba(0,0,0,0.25);
   overflow: hidden;
   mask: linear-gradient(black 40px, transparent 64px);
   animation: sway 6s ease-in-out infinite;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
 }
 
 .holiday-lights::before{
@@ -605,18 +610,32 @@ body{
   height: 16px;
   background:
     radial-gradient(circle at 4% 50%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 14% 50%, #ff4d4f 6px, transparent 8px),
-    radial-gradient(circle at 24% 50%, #54e39e 6px, transparent 8px),
-    radial-gradient(circle at 34% 50%, #73c5ff 6px, transparent 8px),
-    radial-gradient(circle at 44% 50%, #ff9ad5 6px, transparent 8px),
-    radial-gradient(circle at 54% 50%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 64% 50%, #ff4d4f 6px, transparent 8px),
-    radial-gradient(circle at 74% 50%, #54e39e 6px, transparent 8px),
-    radial-gradient(circle at 84% 50%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 94% 50%, #ff9ad5 6px, transparent 8px);
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    radial-gradient(circle at 14% 52%, #ff4d4f 6px, transparent 8px),
+    radial-gradient(circle at 24% 48%, #54e39e 6px, transparent 8px),
+    radial-gradient(circle at 34% 52%, #73c5ff 6px, transparent 8px),
+    radial-gradient(circle at 44% 48%, #ff9ad5 6px, transparent 8px),
+    radial-gradient(circle at 54% 52%, #ffd95c 6px, transparent 8px),
+    radial-gradient(circle at 64% 48%, #ff4d4f 6px, transparent 8px),
+    radial-gradient(circle at 74% 52%, #54e39e 6px, transparent 8px),
+    radial-gradient(circle at 84% 48%, #ffd95c 6px, transparent 8px),
+    radial-gradient(circle at 94% 52%, #ff9ad5 6px, transparent 8px);
+  filter: drop-shadow(0 3px 10px rgba(0,0,0,0.45));
   animation: twinkle 3.6s ease-in-out infinite;
   opacity: 0.95;
+}
+
+.bg-tree{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 65%, rgba(27,63,44,0.7) 0%, rgba(27,63,44,0.12) 60%, transparent 65%),
+    radial-gradient(ellipse at 50% 60%, rgba(25,84,55,0.65) 0%, rgba(25,84,55,0.08) 55%, transparent 70%),
+    radial-gradient(ellipse at 50% 55%, rgba(31,99,66,0.6) 0%, rgba(31,99,66,0.06) 55%, transparent 75%),
+    radial-gradient(circle at 50% 18%, rgba(232,194,106,0.65) 0%, rgba(232,194,106,0.25) 18%, transparent 24%);
+  filter: blur(12px) drop-shadow(0 12px 30px rgba(0,0,0,0.45));
+  opacity: 0.65;
 }
 
 .snow-overlay{
