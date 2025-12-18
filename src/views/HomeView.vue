@@ -625,9 +625,9 @@ body{
     radial-gradient(ellipse at 50% 65%, rgba(27,63,44,0.7) 0%, rgba(27,63,44,0.12) 60%, transparent 65%),
     radial-gradient(ellipse at 50% 60%, rgba(25,84,55,0.65) 0%, rgba(25,84,55,0.08) 55%, transparent 70%),
     radial-gradient(ellipse at 50% 55%, rgba(31,99,66,0.6) 0%, rgba(31,99,66,0.06) 55%, transparent 75%),
-    radial-gradient(circle at 50% 18%, rgba(232,194,106,0.65) 0%, rgba(232,194,106,0.25) 18%, transparent 24%);
-  filter: blur(12px) drop-shadow(0 12px 30px rgba(0,0,0,0.45));
-  opacity: 0.65;
+    radial-gradient(circle at 50% 18%, rgba(232,194,106,0.75) 0%, rgba(232,194,106,0.3) 18%, transparent 24%);
+  filter: drop-shadow(0 12px 30px rgba(0,0,0,0.45));
+  opacity: 0.8;
 }
 
 .snow-overlay{
@@ -821,8 +821,6 @@ body{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:14px;
   background:
-    linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.06) 100%),
-    repeating-linear-gradient(45deg, #c92f32 0 10px, #b62b2d 10px 20px),
     linear-gradient(145deg,#d8393c 0%,#b0292b 50%,#b92e3c 100%);
   border:2px solid #e8c26a; cursor:grab; user-select:none; font-weight:800;
   transition:background .15s ease, transform .05s ease, box-shadow .15s ease;
@@ -833,31 +831,8 @@ body{
   position: relative;
   text-shadow: 0 2px 6px rgba(0,0,0,0.45);
 }
-.chip::before{
-  content:"";
-  position:absolute;
-  inset:-1px;
-  border-radius:inherit;
-  background:
-    linear-gradient(90deg, transparent 46%, rgba(245,219,160,0.7) 46%, rgba(245,219,160,0.95) 50%, transparent 54%),
-    linear-gradient(0deg, transparent 46%, rgba(245,219,160,0.7) 46%, rgba(245,219,160,0.95) 50%, transparent 54%);
-  opacity:0.6;
-  pointer-events:none;
-}
-.chip::after{
-  content:"";
-  position:absolute;
-  width:26px; height:12px;
-  top:7px; left:50%;
-  transform:translateX(-50%);
-  background:
-    radial-gradient(circle at 25% 50%, #f5dba0 40%, transparent 60%),
-    radial-gradient(circle at 75% 50%, #f5dba0 40%, transparent 60%),
-    linear-gradient(90deg, transparent 46%, #e8c26a 46%, #e8c26a 54%, transparent 54%);
-  opacity:0.9;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
-  pointer-events:none;
-}
+.chip::before,
+.chip::after{ display:none; }
 
 /* 기타용 번호+사유 카드 */
 .chip-etc{
