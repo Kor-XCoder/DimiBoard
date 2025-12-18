@@ -634,14 +634,14 @@ body{
   pointer-events:none;
   z-index:999;
   background-image:
-    radial-gradient(2px 2px at 20% 20%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(2px 2px at 80% 10%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(2px 2px at 50% 30%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(2px 2px at 30% 70%, rgba(255,255,255,0.28), transparent),
-    radial-gradient(2px 2px at 70% 80%, rgba(255,255,255,0.22), transparent);
+    radial-gradient(3px 3px at 20% 20%, rgba(255,255,255,0.38), transparent),
+    radial-gradient(3px 3px at 80% 10%, rgba(255,255,255,0.45), transparent),
+    radial-gradient(3px 3px at 50% 30%, rgba(255,255,255,0.36), transparent),
+    radial-gradient(3px 3px at 30% 70%, rgba(255,255,255,0.34), transparent),
+    radial-gradient(3px 3px at 70% 80%, rgba(255,255,255,0.3), transparent);
   background-size: 260px 260px, 300px 300px, 260px 260px, 280px 280px, 320px 320px;
   animation: snow 24s linear infinite;
-  opacity: 0.5;
+  opacity: 0.7;
   will-change: background-position;
   background-attachment: fixed;
 }
