@@ -1,11 +1,8 @@
 <template>
-  <div class="bg-tree" aria-hidden="true"></div>
-  <div class="snow-overlay" aria-hidden="true"></div>
   <div class="fireworks-container" style="position:fixed; left:0;top:0; width: 100%;height: 100%;">
 
   </div>
   <div class="wrap" ref="wrapEl">
-    <div class="holiday-garland holiday-lights" aria-hidden="true"></div>
     <header class="topbar">
       <div class="title">
         <h1>{{ grade }}학년 {{ban}}반 인원 현황</h1>
@@ -547,9 +544,7 @@ html,body,#app{
 
 body{
   margin:0;
-  background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 18%),
-             radial-gradient(circle at 80% 10%, rgba(255,255,255,0.05), transparent 16%),
-             linear-gradient(180deg,#0c130f 0%,#0b100c 35%,#102019 100%);
+  background:#0c130f;
   color:var(--text);
   font:15px/1.45 "Pretendard Variable", Pretendard,system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif;
 }
@@ -562,104 +557,14 @@ body{
   padding: 0;
 }
 
-.holiday-garland{
-  position:absolute;
-  inset: -6px 0 auto 0;
-  height: 64px;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 6% 38%, #ff4d4f 5px, transparent 7px),
-    radial-gradient(circle at 13% 46%, #ffd95c 5px, transparent 7px),
-    radial-gradient(circle at 21% 40%, #54e39e 5px, transparent 7px),
-    radial-gradient(circle at 29% 44%, #ff9ad5 5px, transparent 7px),
-    radial-gradient(circle at 37% 38%, #73c5ff 5px, transparent 7px),
-    radial-gradient(circle at 45% 46%, #ffd95c 5px, transparent 7px),
-    radial-gradient(circle at 53% 40%, #ff4d4f 5px, transparent 7px),
-    radial-gradient(circle at 61% 44%, #54e39e 5px, transparent 7px),
-    radial-gradient(circle at 69% 38%, #ffd95c 5px, transparent 7px),
-    radial-gradient(circle at 77% 44%, #ff9ad5 5px, transparent 7px),
-    radial-gradient(circle at 85% 40%, #73c5ff 5px, transparent 7px),
-    radial-gradient(circle at 93% 46%, #ffd95c 5px, transparent 7px),
-    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.08)),
-    repeating-linear-gradient(135deg, #1d3327 0 10px, #274232 10px 20px),
-    repeating-linear-gradient(45deg, rgba(34,63,46,0.9) 0 14px, rgba(41,79,55,0.9) 14px 28px);
-  border-radius: 18px 18px 12px 12px;
-  box-shadow: inset 0 -6px 12px rgba(0,0,0,0.25);
-  overflow: hidden;
-  mask: linear-gradient(black 40px, transparent 64px);
-  animation: sway 6s ease-in-out infinite;
-  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
-}
-
-.holiday-lights::before{
-  content: "";
-  position:absolute;
-  inset: 12px 16px auto 16px;
-  height: 16px;
-  background:
-    radial-gradient(circle at 4% 50%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 14% 52%, #ff4d4f 6px, transparent 8px),
-    radial-gradient(circle at 24% 48%, #54e39e 6px, transparent 8px),
-    radial-gradient(circle at 34% 52%, #73c5ff 6px, transparent 8px),
-    radial-gradient(circle at 44% 48%, #ff9ad5 6px, transparent 8px),
-    radial-gradient(circle at 54% 52%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 64% 48%, #ff4d4f 6px, transparent 8px),
-    radial-gradient(circle at 74% 52%, #54e39e 6px, transparent 8px),
-    radial-gradient(circle at 84% 48%, #ffd95c 6px, transparent 8px),
-    radial-gradient(circle at 94% 52%, #ff9ad5 6px, transparent 8px);
-  filter: drop-shadow(0 3px 10px rgba(0,0,0,0.45));
-  animation: twinkle 3.6s ease-in-out infinite;
-  opacity: 0.95;
-}
-
-.bg-tree{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background:
-    radial-gradient(ellipse at 50% 65%, rgba(27,63,44,0.7) 0%, rgba(27,63,44,0.12) 60%, transparent 65%),
-    radial-gradient(ellipse at 50% 60%, rgba(25,84,55,0.65) 0%, rgba(25,84,55,0.08) 55%, transparent 70%),
-    radial-gradient(ellipse at 50% 55%, rgba(31,99,66,0.6) 0%, rgba(31,99,66,0.06) 55%, transparent 75%),
-    radial-gradient(circle at 50% 18%, rgba(232,194,106,0.75) 0%, rgba(232,194,106,0.3) 18%, transparent 24%);
-  filter: drop-shadow(0 12px 30px rgba(0,0,0,0.45));
-  opacity: 0.8;
-}
-
-.snow-overlay{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:999;
-  background-image:
-    radial-gradient(3px 3px at 20% 20%, rgba(255,255,255,0.55), transparent),
-    radial-gradient(3px 3px at 80% 10%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(3px 3px at 50% 30%, rgba(255,255,255,0.52), transparent),
-    radial-gradient(3px 3px at 30% 70%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(3px 3px at 70% 80%, rgba(255,255,255,0.46), transparent);
-  background-size: 260px 260px, 300px 300px, 260px 260px, 280px 280px, 320px 320px;
-  animation: snow 24s linear infinite;
-  opacity: 0.85;
-  will-change: background-position;
-  background-attachment: fixed;
-}
-
 .topbar{
   margin-top: 1rem;
   grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:16px;
-  background:linear-gradient(180deg,rgba(40,66,51,0.9) 0%,rgba(28,42,34,0.9) 100%);
+  background:var(--panel);
   border-radius:var(--radius); padding:14px 18px; box-shadow:var(--shadow);
   border:1px solid #3b5e48;
   position: relative;
   overflow: hidden;
-}
-.topbar::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 10% 40%, rgba(255,255,255,0.08), transparent 38%),
-             radial-gradient(circle at 90% 10%, rgba(232,194,106,0.18), transparent 36%);
-  pointer-events:none;
 }
 .title{display:flex; gap:14px; align-items:baseline}
 .title h1{margin:0; font-size:22px; font-weight:800; color:#f7f2e8;}
@@ -670,9 +575,9 @@ body{
 .btn{background:var(--muted); color:var(--text); border:1px solid #3f5f49; padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow); transition: transform .05s ease, box-shadow .15s ease;}
 .btn:hover{background:#294732; box-shadow:0 6px 14px rgba(0,0,0,0.35);}
 .btn:active{transform:translateY(1px)}
-.btn.ghost{background:linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,0));}
-.btn.ok{background:linear-gradient(180deg,#1f4a33,#1a3c2a); border-color:#2f6d46; color:#d4ffd9}
-.btn.warn{background:linear-gradient(180deg,#622a2a,#531f1f); border-color:#8c3c3c; color:#ffe3e3}
+.btn.ghost{background:var(--muted);}
+.btn.ok{background:#1f4a33; border-color:#2f6d46; color:#d4ffd9}
+.btn.warn{background:#622a2a; border-color:#8c3c3c; color:#ffe3e3}
 
 .main{
   display:grid;
@@ -692,23 +597,7 @@ body{
   overflow:hidden;
 }
 .section{ padding:16px; min-width:0; grid-row: 1 / span 5; grid-column: 2; }
-.section::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 12% 18%, rgba(255,255,255,0.05), transparent 32%),
-             radial-gradient(circle at 86% 10%, rgba(232,194,106,0.15), transparent 36%);
-  pointer-events:none;
-}
 .aside{ padding:16px; width: 16rem; }
-.aside::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 30% 10%, rgba(232,194,106,0.14), transparent 40%),
-             radial-gradient(circle at 80% 20%, rgba(255,77,79,0.1), transparent 38%);
-  pointer-events:none;
-}
 
 .aside-summary{ grid-column: 1; grid-row: 1; }
 .aside-announcement{ grid-column: 1; grid-row: 2; }
@@ -719,7 +608,7 @@ body{
 .counter{display:grid; gap:10px}
 
 .card{
-  background:linear-gradient(135deg, rgba(31,51,38,0.9), rgba(26,40,32,0.95));
+  background:#1f3326;
   border:1px solid #33533e;
   border-radius:12px; 
   padding:12px; 
@@ -746,22 +635,8 @@ body{
   grid-auto-flow: row dense;
   position: relative;
 }
-.board::before{
-  content:"";
-  position:absolute;
-  inset: -8px 0 auto 0;
-  height: 48px;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%),
-    repeating-linear-gradient(90deg, #1f3b2c 0 12px, #244732 12px 24px);
-  opacity: 0.9;
-  border-radius: 12px;
-  pointer-events:none;
-  box-shadow: inset 0 -4px 10px rgba(0,0,0,0.35);
-}
-.board::before{ display:none; }
 .lane{
-  background:linear-gradient(180deg,#1a2d22 0%,#102219 100%);
+  background:#1a2d22;
   border:1px dashed #4f725c;
   border-radius:14px; padding:12px; min-height:220px; min-width:0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 24px rgba(0,0,0,0.35);
@@ -777,20 +652,6 @@ body{
 }
 .lane.room{ grid-row: 1; grid-column: 1 / span 4; }
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; position: relative; padding-bottom: 6px;}
-.lane-header::after{
-  content:"";
-  position:absolute;
-  left:0; right:0; bottom:-4px;
-  height: 12px;
-  background:
-    radial-gradient(circle at 10% 50%, #ffd95c 5px, transparent 8px),
-    radial-gradient(circle at 25% 50%, #ff4d4f 5px, transparent 8px),
-    radial-gradient(circle at 40% 50%, #73c5ff 5px, transparent 8px),
-    radial-gradient(circle at 55% 50%, #54e39e 5px, transparent 8px),
-    radial-gradient(circle at 70% 50%, #ffd95c 5px, transparent 8px),
-    radial-gradient(circle at 85% 50%, #ff9ad5 5px, transparent 8px);
-  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35));
-}
 .lane-title span{font-weight:800; font-size: 1.2rem; color:#f7f2e8; letter-spacing:0.3px; display:flex; align-items:center; gap:8px;}
 .lane-title span::before{
   content:"🎄";
@@ -820,8 +681,7 @@ body{
 .chip{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:14px;
-  background:
-    linear-gradient(145deg,#d8393c 0%,#b0292b 50%,#b92e3c 100%);
+  background:#c23234;
   border:2px solid #e8c26a; cursor:grab; user-select:none; font-weight:800;
   transition:background .15s ease, transform .05s ease, box-shadow .15s ease;
   color: #fffdf6;
@@ -838,7 +698,7 @@ body{
 .chip-etc{
   display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
   min-width:120px; height:auto; padding:12px 14px; gap:6px;
-  background:linear-gradient(145deg,#2a4c36 0%,#1f3b2c 100%);
+  background:#2a4c36;
 }
 .chip-etc .num{ font-size:18px; font-weight:900; line-height:1; color:#f7f2e8; }
 .chip-etc .reason{ font-size:14px; font-weight:700; line-height:1.25; opacity:.95; max-width:24ch; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#f5dba0; }
@@ -847,11 +707,10 @@ body{
   box-shadow:0 0 0 2px rgba(232,194,106,.3) inset, 0 0 18px rgba(232,194,106,.35);
 }
 
-.chip:hover{ background:linear-gradient(145deg,#e24649 0%,#c23234 50%,#c93a48 100%); box-shadow:0 12px 20px rgba(0,0,0,0.35); }
+.chip:hover{ background:#b0292b; box-shadow:0 12px 20px rgba(0,0,0,0.35); }
 .chip.highlight {
   outline:3px solid rgba(232,194,106,0.8);
   outline-offset:2px;
-  filter:drop-shadow(0 0 12px rgba(232,194,106,.55));
 }
 
 /* 터치/펜 드래그용 고스트 요소 */
@@ -899,7 +758,7 @@ body{
   margin: 0;
   margin-left: 5px;
   padding: 10px;
-  background:linear-gradient(135deg,#1f4a33,#173a28);
+  background:#1f4a33;
   border-radius: 12px;
   border:1px solid #2f6d46;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
@@ -920,19 +779,4 @@ body{
 /* 공지사항 패널 */
 
 
-@keyframes snow {
-  0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
-  100% { background-position: 0px 600px, 0px 500px, 0px 700px, 0px 650px, 0px 550px; }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.9; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
-  50% { opacity: 1; filter: drop-shadow(0 2px 10px rgba(232,194,106,0.6)); }
-}
-
-@keyframes sway {
-  0% { transform: rotate(-1deg); }
-  50% { transform: rotate(1deg); }
-  100% { transform: rotate(-1deg); }
-}
 </style>
