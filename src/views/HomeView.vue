@@ -135,8 +135,6 @@ import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import JSConfetti from 'js-confetti'
 import axios from 'axios'
 
-import { Fireworks } from 'fireworks-js'
-
 import { useRoute } from 'vue-router';
 
 // ---- 상수/타입
@@ -761,6 +759,7 @@ body{
   pointer-events:none;
   box-shadow: inset 0 -4px 10px rgba(0,0,0,0.35);
 }
+.board::before{ display:none; }
 .lane{
   background:linear-gradient(180deg,#1a2d22 0%,#102219 100%);
   border:1px dashed #4f725c;
