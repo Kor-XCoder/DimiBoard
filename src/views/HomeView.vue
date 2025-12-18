@@ -1,6 +1,9 @@
 <template>
   <div class="bg-tree" aria-hidden="true"></div>
   <div class="snow-overlay" aria-hidden="true"></div>
+  <div class="fireworks-container" style="position:fixed; left:0;top:0; width: 100%;height: 100%;">
+
+  </div>
   <div class="wrap" ref="wrapEl">
     <div class="holiday-garland holiday-lights" aria-hidden="true"></div>
     <header class="topbar">
@@ -743,12 +746,25 @@ body{
   grid-auto-flow: row dense;
   position: relative;
 }
+.board::before{
+  content:"";
+  position:absolute;
+  inset: -8px 0 auto 0;
+  height: 48px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%),
+    repeating-linear-gradient(90deg, #1f3b2c 0 12px, #244732 12px 24px);
+  opacity: 0.9;
+  border-radius: 12px;
+  pointer-events:none;
+  box-shadow: inset 0 -4px 10px rgba(0,0,0,0.35);
+}
 .board::before{ display:none; }
 .lane{
   background:linear-gradient(180deg,#1a2d22 0%,#102219 100%);
   border:1px dashed #4f725c;
   border-radius:14px; padding:12px; min-height:220px; min-width:0;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 12px rgba(0,0,0,0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 24px rgba(0,0,0,0.35);
   position: relative;
 }
 .lane::after{
@@ -811,10 +827,9 @@ body{
   color: #fffdf6;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
   font-size: 19px;
-  box-shadow: 0 4px 9px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.14);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
   position: relative;
   text-shadow: 0 2px 6px rgba(0,0,0,0.45);
-  will-change: transform;
 }
 .chip::before,
 .chip::after{ display:none; }
@@ -919,12 +934,5 @@ body{
   0% { transform: rotate(-1deg); }
   50% { transform: rotate(1deg); }
   100% { transform: rotate(-1deg); }
-}
-
-@media (prefers-reduced-motion: reduce){
-  .snow-overlay{ animation: none; opacity: 0.35; }
-  .holiday-garland{ animation: none; }
-  .holiday-lights::before{ animation: none; }
-  .board::before{ display:none; }
 }
 </style>
