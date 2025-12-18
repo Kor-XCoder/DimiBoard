@@ -828,7 +828,10 @@ body{
 .chip{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:14px;
-  background:linear-gradient(145deg,#d8393c 0%,#b0292b 50%,#b92e3c 100%);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.06) 100%),
+    repeating-linear-gradient(45deg, #c92f32 0 10px, #b62b2d 10px 20px),
+    linear-gradient(145deg,#d8393c 0%,#b0292b 50%,#b92e3c 100%);
   border:2px solid #e8c26a; cursor:grab; user-select:none; font-weight:800;
   transition:background .15s ease, transform .05s ease, box-shadow .15s ease;
   color: #fff5e6;
@@ -840,11 +843,27 @@ body{
 .chip::before{
   content:"";
   position:absolute;
-  width:10px; height:10px;
-  border-radius:50%;
-  background:#f5dba0;
-  top:6px; right:6px;
-  box-shadow:0 0 12px rgba(245,219,160,0.8);
+  inset:-1px;
+  border-radius:inherit;
+  background:
+    linear-gradient(90deg, transparent 44%, #f5dba0 44%, #f5dba0 56%, transparent 56%),
+    linear-gradient(0deg, transparent 44%, #f5dba0 44%, #f5dba0 56%, transparent 56%);
+  opacity:0.9;
+  pointer-events:none;
+}
+.chip::after{
+  content:"";
+  position:absolute;
+  width:26px; height:12px;
+  top:8px; left:50%;
+  transform:translateX(-50%);
+  background:
+    radial-gradient(circle at 25% 50%, #f5dba0 40%, transparent 60%),
+    radial-gradient(circle at 75% 50%, #f5dba0 40%, transparent 60%),
+    linear-gradient(90deg, transparent 45%, #e8c26a 45%, #e8c26a 55%, transparent 55%);
+  opacity:0.9;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  pointer-events:none;
 }
 
 /* 기타용 번호+사유 카드 */
