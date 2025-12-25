@@ -7,6 +7,7 @@
       <div class="title">
         <h1>{{ grade }}학년 {{ban}}반 인원 현황</h1>
         <span class="sub" style="color: white; font-size: 1.4rem; margin-left: 1rem;">{{ nowText }}</span>
+        <span class="new-year-badge">🎆 새해 복 많이 받으세요</span>
       </div>
       <div class="toolbar">
         <input
@@ -528,9 +529,9 @@ defineExpose({ TOTAL, LANES, lanes, moveTo, resetAll, allIn, present, absent, la
 /* Safari 등에서 버튼 요소 드래그 안정화 */
 .chip{ -webkit-user-drag: element; }
 :root{
-  --bg:#0c140f; --panel:rgba(18,29,22,0.9); --muted:#1e2e23; --line:#2e4635;
-  --text:#f5f7f0; --sub:#d5e3cf; --accent:#e8c26a; --shadow: 0 10px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
-  --radius:16px; --chip:#1f3326; --chip-hover:#23422f;
+  --bg:#0b0e1f; --panel:rgba(13,18,40,0.92); --muted:#1a244a; --line:#2d3a66;
+  --text:#f7f8ff; --sub:#c4c9ef; --accent:#f6c768; --shadow: 0 10px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+  --radius:16px; --chip:#202b55; --chip-hover:#293566;
   --container-max: 1920px;
 }
 *{box-sizing:border-box}
@@ -544,7 +545,7 @@ html,body,#app{
 
 body{
   margin:0;
-  background:#0c130f;
+  background: radial-gradient(circle at top, #1a2250, #0b0e1f 55%, #070815 100%);
   color:var(--text);
   font:15px/1.45 "Pretendard Variable", Pretendard,system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif;
 }
@@ -562,22 +563,54 @@ body{
   grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:16px;
   background:var(--panel);
   border-radius:var(--radius); padding:14px 18px; box-shadow:var(--shadow);
-  border:1px solid #3b5e48;
+  border:1px solid #36477c;
   position: relative;
   overflow: hidden;
+}
+.topbar::before{
+  content:"";
+  position:absolute;
+  inset:-40% 0 auto 0;
+  height:140%;
+  background: radial-gradient(circle at 20% 20%, rgba(246,199,104,0.35), transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(125,175,255,0.35), transparent 55%),
+    radial-gradient(circle at 60% 80%, rgba(255,120,158,0.2), transparent 50%);
+  opacity:0.7;
+  pointer-events:none;
+}
+.topbar::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0 0;
+  height:3px;
+  background: linear-gradient(90deg, transparent, rgba(246,199,104,0.8), rgba(255,255,255,0.6), rgba(125,175,255,0.8), transparent);
+  opacity:0.8;
 }
 .title{display:flex; gap:14px; align-items:baseline}
 .title h1{margin:0; font-size:22px; font-weight:800; color:#f7f2e8;}
 .title .sub{color:var(--sub); font-size:11px}
+.new-year-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  background: linear-gradient(120deg, rgba(246,199,104,0.9), rgba(255,255,255,0.85));
+  color:#2b2140;
+  font-weight:800;
+  font-size:0.95rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  white-space:nowrap;
+}
 .toolbar{display:flex; gap:8px; flex-wrap:wrap}
-.input{background:rgba(15,25,18,0.85); color:var(--text); border:1px solid #3f5f49; padding:10px 12px; border-radius:10px; outline:none; width:200px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);}
+.input{background:rgba(15,22,45,0.85); color:var(--text); border:1px solid #3a4a86; padding:10px 12px; border-radius:10px; outline:none; width:200px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);}
 .input::placeholder{color:#b7c9b6}
-.btn{background:var(--muted); color:var(--text); border:1px solid #3f5f49; padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow); transition: transform .05s ease, box-shadow .15s ease;}
-.btn:hover{background:#294732; box-shadow:0 6px 14px rgba(0,0,0,0.35);}
+.btn{background:var(--muted); color:var(--text); border:1px solid #3a4a86; padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow); transition: transform .05s ease, box-shadow .15s ease;}
+.btn:hover{background:#253262; box-shadow:0 6px 14px rgba(0,0,0,0.35);}
 .btn:active{transform:translateY(1px)}
 .btn.ghost{background:var(--muted);}
-.btn.ok{background:#1f4a33; border-color:#2f6d46; color:#d4ffd9}
-.btn.warn{background:#622a2a; border-color:#8c3c3c; color:#ffe3e3}
+.btn.ok{background:#1f3f7a; border-color:#3357a1; color:#e6f0ff}
+.btn.warn{background:#5a2c2c; border-color:#8c4a4a; color:#ffe3e3}
 
 .main{
   display:grid;
@@ -608,8 +641,8 @@ body{
 .counter{display:grid; gap:10px}
 
 .card{
-  background:#1f3326;
-  border:1px solid #33533e;
+  background:#1b2450;
+  border:1px solid #33406c;
   border-radius:12px; 
   padding:12px; 
   display:flex; 
@@ -621,8 +654,8 @@ body{
 .label{color:var(--sub)}
 
 .pill{padding:6px 10px; border-radius:999px; font-weight:800; letter-spacing:.4px;}
-.pill.gray{background:#304734; color:#f5f7f0; border:1px solid #4f6d56;}
-.pill.green{background:#1f4a33; color:#d3ffd9; border:1px solid #2f6d46;}
+.pill.gray{background:#2a335f; color:#f5f7f0; border:1px solid #46518b;}
+.pill.green{background:#1f3f7a; color:#d3e7ff; border:1px solid #3357a1;}
 .pill.red{background:#612727; color:#ffe0e0; border:1px solid #8c3c3c;}
 .meta{margin-top:12px; color:var(--sub); font-size:12px}
 
@@ -636,8 +669,8 @@ body{
   position: relative;
 }
 .lane{
-  background:#1a2d22;
-  border:1px dashed #4f725c;
+  background:#161f45;
+  border:1px dashed #44518a;
   border-radius:14px; padding:12px; min-height:220px; min-width:0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 24px rgba(0,0,0,0.35);
   position: relative;
@@ -654,7 +687,7 @@ body{
 .lane-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; position: relative; padding-bottom: 6px;}
 .lane-title span{font-weight:800; font-size: 1.2rem; color:#f7f2e8; letter-spacing:0.3px; display:flex; align-items:center; gap:8px;}
 .lane-title span::before{
-  content:"🎄";
+  content:"✨";
   font-size: 1.1rem;
 }
 
@@ -681,8 +714,8 @@ body{
 .chip{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:42px; height:42px; padding:0 10px; border-radius:14px;
-  background:#c23234;
-  border:2px solid #e8c26a; cursor:grab; user-select:none; font-weight:800;
+  background:#2a3c7a;
+  border:2px solid #f6c768; cursor:grab; user-select:none; font-weight:800;
   transition:background .15s ease, transform .05s ease, box-shadow .15s ease;
   color: #fffdf6;
   font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif;
@@ -698,7 +731,7 @@ body{
 .chip-etc{
   display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
   min-width:120px; height:auto; padding:12px 14px; gap:6px;
-  background:#2a4c36;
+  background:#232f63;
 }
 .chip-etc .num{ font-size:18px; font-weight:900; line-height:1; color:#f7f2e8; }
 .chip-etc .reason{ font-size:14px; font-weight:700; line-height:1.25; opacity:.95; max-width:24ch; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#f5dba0; }
@@ -707,7 +740,7 @@ body{
   box-shadow:0 0 0 2px rgba(232,194,106,.3) inset, 0 0 18px rgba(232,194,106,.35);
 }
 
-.chip:hover{ background:#b0292b; box-shadow:0 12px 20px rgba(0,0,0,0.35); }
+.chip:hover{ background:#344889; box-shadow:0 12px 20px rgba(0,0,0,0.35); }
 .chip.highlight {
   outline:3px solid rgba(232,194,106,0.8);
   outline-offset:2px;
@@ -730,11 +763,11 @@ body{
 .wrap.dragging, .wrap.dragging .board, .wrap.dragging .chip { touch-action: none; }
 
 .menu{
-  position:fixed; z-index:50; background:#18271f; border:1px solid #33533e; border-radius:12px; padding:6px; width:160px;
+  position:fixed; z-index:50; background:#162042; border:1px solid #33406c; border-radius:12px; padding:6px; width:160px;
   box-shadow:0 12px 28px rgba(0,0,0,.5)
 }
 .menu button{ width:100%; border:0; background:transparent; color:var(--text); text-align:left; padding:10px 12px; border-radius:8px; cursor:pointer; font-weight:700; }
-.menu button:hover{ background:#23422f }
+.menu button:hover{ background:#263363 }
 
 @media (max-width: 1100px){
   .wrap{ grid-template-columns: 1fr }
@@ -758,9 +791,9 @@ body{
   margin: 0;
   margin-left: 5px;
   padding: 10px;
-  background:#1f4a33;
+  background:#1f3f7a;
   border-radius: 12px;
-  border:1px solid #2f6d46;
+  border:1px solid #3357a1;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
