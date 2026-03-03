@@ -314,7 +314,7 @@ onUnmounted(() => {
     if (timer) clearInterval(timer);
 });
 
-// 파생값
+// 파생
 const present = computed(() => lanes.room.length);
 const absent = computed(() => TOTAL - present.value);
 const otherLanes = computed(() => LANES.filter((l) => l !== "room"));
