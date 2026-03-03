@@ -5,7 +5,7 @@
   <div class="wrap" ref="wrapEl">
     <header class="topbar">
       <div class="title">
-        <h1>{{ grade }}학년 {{ban}}반 인원 현황</h1>
+        <h1>2학년 4반 인원 현황</h1>
         <span class="sub" style="color: white; font-size: 1.4rem; margin-left: 1rem;">{{ nowText }}</span>
       </div>
       <div class="toolbar">
@@ -109,7 +109,7 @@
       <aside class="aside aside-announcement">
         <!-- 디데이 블록 -->
         <div class="dday">
-          <span>2027/3/2</span>
+          <span>3월 모의고사</span>
           <h1>{{ ddayText }}</h1>
         </div>
       </aside>
@@ -224,7 +224,7 @@ const loadState = (): BoardState => {
 
 let lanes = reactive<BoardState>(loadState())
 onMounted(async () => {
-  const targetDate = new Date('2027-03-02T00:00:00+09:00'); // KST
+  const targetDate = new Date('2026-03-24T00:00:00+09:00'); // KST
   const now = new Date()
   const diff = targetDate.getTime() - now.getTime()
   const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
